@@ -8,13 +8,20 @@
   let PHOTOS = {};
 
   // -------- Boot --------
-  fetch('photos.json?v=4')
+  fetch('photos.json?v=5')
     .then((r) => r.json())
     .then((p) => {
       PHOTOS = p;
       renderHero();
       renderStories();
       buildMap();
+      // Dev hash trigger (e.g. #photos=dullstroom) — open lightbox for visual testing
+      if (location.hash.startsWith('#photos=')) {
+        const id = location.hash.slice(8);
+        if (PHOTOS[id]?.photos?.length) {
+          setTimeout(() => openLightbox(PHOTOS[id].photos, 0), 200);
+        }
+      }
     })
     .catch(() => {
       renderStories();
@@ -211,9 +218,9 @@
       ${actions}
     `;
 
-    // Photo click → lightbox
+    // Photo click → lightbox (lead OR strip thumb)
     if (photos.length) {
-      el.querySelectorAll('.photo-cluster .ph').forEach((node) => {
+      el.querySelectorAll('.photo-cluster .lead, .photo-cluster .strip .ph').forEach((node) => {
         node.addEventListener('click', () => {
           const idx = parseInt(node.dataset.idx, 10);
           openLightbox(photos, idx);
@@ -224,37 +231,145 @@
     return el;
   }
 
-  // -------- Lightbox --------
+  // -------- Lightbox (swipeable carousel) --------
   const lb = document.getElementById('lightbox');
-  const lbImg = document.getElementById('lightbox-img');
+  const lbTrack = document.getElementById('lightbox-track');
   const lbCredit = document.getElementById('lightbox-credit');
+  const lbCounter = document.getElementById('lightbox-counter');
+  const lbDots = document.getElementById('lightbox-dots');
   let lbState = { photos: [], idx: 0 };
+
   document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+  document.getElementById('lightbox-prev').addEventListener('click', (e) => { e.stopPropagation(); stepLightbox(-1); });
+  document.getElementById('lightbox-next').addEventListener('click', (e) => { e.stopPropagation(); stepLightbox(1); });
+
+  // Click on dimmed area closes; not on the track (where swipe happens)
   lb.addEventListener('click', (e) => {
-    if (e.target === lb) closeLightbox();
+    if (e.target === lb || e.target.classList.contains('lightbox-stage')) closeLightbox();
   });
+
   document.addEventListener('keydown', (e) => {
     if (!lb.classList.contains('open')) return;
     if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowRight') stepLightbox(1);
-    if (e.key === 'ArrowLeft') stepLightbox(-1);
+    else if (e.key === 'ArrowRight') stepLightbox(1);
+    else if (e.key === 'ArrowLeft') stepLightbox(-1);
   });
 
   function openLightbox(photos, idx) {
     lbState = { photos, idx };
-    showLb();
+    lbTrack.innerHTML = photos.map((p) => `
+      <div class="lightbox-slide">
+        <img src="${p.src}" alt="" draggable="false">
+      </div>
+    `).join('');
+    lbDots.innerHTML = photos.map((_, i) =>
+      `<div class="lightbox-dot${i === idx ? ' active' : ''}"></div>`
+    ).join('');
+    snapTo(idx, false);
+    showCredit();
     lb.classList.add('open');
   }
+
   function stepLightbox(d) {
-    lbState.idx = (lbState.idx + d + lbState.photos.length) % lbState.photos.length;
-    showLb();
+    const n = lbState.photos.length;
+    lbState.idx = (lbState.idx + d + n) % n;
+    snapTo(lbState.idx, true);
+    showCredit();
   }
-  function showLb() {
+
+  function snapTo(idx, animate) {
+    lbState.idx = idx;
+    if (!animate) lbTrack.classList.add('dragging');
+    lbTrack.style.transform = `translateX(${-idx * 100}%)`;
+    if (!animate) {
+      // eslint-disable-next-line no-unused-expressions
+      lbTrack.offsetHeight;
+      requestAnimationFrame(() => lbTrack.classList.remove('dragging'));
+    }
+    [...lbDots.children].forEach((dot, i) =>
+      dot.classList.toggle('active', i === idx)
+    );
+  }
+
+  function showCredit() {
     const p = lbState.photos[lbState.idx];
-    lbImg.src = p.src;
-    lbCredit.innerHTML = `${lbState.idx + 1} of ${lbState.photos.length} · photograph by <a href="${p.author_uri}" target="_blank" rel="noopener">${p.author || 'anonymous'}</a> on google maps`;
+    lbCounter.innerHTML = `<b>${lbState.idx + 1}</b> of ${lbState.photos.length}`;
+    lbCredit.innerHTML = `Photograph by <a href="${p.author_uri}" target="_blank" rel="noopener">${p.author || 'anonymous'}</a> · Google Maps contributor`;
   }
+
   function closeLightbox() { lb.classList.remove('open'); }
+
+  // -------- Swipe handling (touch + mouse drag) --------
+  let drag = null;
+  const SWIPE_THRESHOLD_PX = 50;
+  const SWIPE_VELOCITY = 0.4;
+
+  function dragStart(clientX, clientY) {
+    if (!lb.classList.contains('open')) return;
+    drag = {
+      startX: clientX, startY: clientY,
+      startTime: Date.now(),
+      width: lbTrack.offsetWidth || window.innerWidth,
+      delta: 0, locked: null,
+    };
+    lbTrack.classList.add('dragging');
+  }
+  function dragMove(clientX, clientY) {
+    if (!drag) return;
+    const dx = clientX - drag.startX;
+    const dy = clientY - drag.startY;
+    if (drag.locked === null) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      drag.locked = Math.abs(dx) > Math.abs(dy) ? 'h' : 'v';
+      if (drag.locked === 'v') {
+        lbTrack.classList.remove('dragging');
+        drag = null;
+        return;
+      }
+    }
+    if (drag.locked !== 'h') return;
+    drag.delta = dx;
+    const pct = -lbState.idx * 100 + (dx / drag.width) * 100;
+    lbTrack.style.transform = `translateX(${pct}%)`;
+  }
+  function dragEnd() {
+    if (!drag || drag.locked !== 'h') { drag = null; return; }
+    const dx = drag.delta;
+    const dt = Math.max(1, Date.now() - drag.startTime);
+    const velocity = Math.abs(dx) / dt;
+    let direction = 0;
+    if (Math.abs(dx) > SWIPE_THRESHOLD_PX || velocity > SWIPE_VELOCITY) {
+      direction = dx < 0 ? 1 : -1;
+    }
+    drag = null;
+    if (direction !== 0) {
+      const n = lbState.photos.length;
+      lbState.idx = (lbState.idx + direction + n) % n;
+    }
+    snapTo(lbState.idx, true);
+    showCredit();
+  }
+
+  lbTrack.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    dragStart(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+  lbTrack.addEventListener('touchmove', (e) => {
+    if (!drag || e.touches.length !== 1) return;
+    dragMove(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+  lbTrack.addEventListener('touchend', dragEnd);
+  lbTrack.addEventListener('touchcancel', dragEnd);
+
+  lbTrack.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    dragStart(e.clientX, e.clientY);
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!drag) return;
+    dragMove(e.clientX, e.clientY);
+  });
+  document.addEventListener('mouseup', dragEnd);
 
   // -------- Map --------
   let map, mobileMap;
