@@ -268,10 +268,21 @@
     color: var(--ink);
     border-color: var(--paper);
   }
-  .chip[data-tier="1"].active { background: var(--moss); border-color: var(--moss); color: oklch(0.18 0.012 145); }
-  .chip[data-tier="2"].active { background: var(--amber); border-color: var(--amber); color: oklch(0.22 0.04 75); }
-  .chip[data-tier="3"].active { background: var(--rose); border-color: var(--rose); color: oklch(0.20 0.04 25); }
-  .chip[data-tier="urban"].active { background: var(--plum); border-color: var(--plum); color: oklch(0.20 0.04 320); }
+  .chip.cat .icon {
+    margin-right: 6px;
+    color: var(--brass);
+    font-size: 11px;
+    line-height: 1;
+  }
+  .chip.cat.active .icon { color: inherit; }
+  .chip[data-cat="featured"].active { background: var(--brass); color: var(--ink); border-color: var(--brass); }
+  .chip[data-cat="highland"].active { background: var(--moss); border-color: var(--moss); color: oklch(0.18 0.012 145); }
+  .chip[data-cat="beach"].active { background: oklch(0.78 0.10 220); border-color: oklch(0.78 0.10 220); color: oklch(0.20 0.04 220); }
+  .chip[data-cat="wildlife"].active { background: oklch(0.72 0.12 110); border-color: oklch(0.72 0.12 110); color: oklch(0.20 0.04 110); }
+  .chip[data-cat="urban"].active { background: var(--plum); border-color: var(--plum); color: oklch(0.20 0.04 320); }
+  .chip[data-cat="family"].active { background: var(--rose); border-color: var(--rose); color: oklch(0.20 0.04 25); }
+  .chip[data-cat="nature"].active { background: oklch(0.66 0.10 160); border-color: oklch(0.66 0.10 160); color: oklch(0.20 0.04 160); }
+  .chip[data-cat="historic"].active { background: oklch(0.66 0.08 50); border-color: oklch(0.66 0.08 50); color: oklch(0.20 0.04 50); }
 
   .count {
     font-family: var(--serif);
@@ -455,20 +466,31 @@
   .story:first-child { border-top: none; padding-top: clamp(20px, 4vw, 40px); }
 
   .story-head {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: clamp(20px, 3vw, 40px);
-    align-items: baseline;
     margin-bottom: clamp(20px, 3vw, 36px);
   }
-  .story-num {
-    font-family: var(--serif);
-    font-style: italic;
-    font-weight: 400;
-    font-size: clamp(48px, 7vw, 96px);
-    line-height: 0.85;
+  .featured-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
     color: var(--brass);
-    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .featured-badge::before {
+    content: "★";
+    font-size: 13px;
+    letter-spacing: 0;
+  }
+  .featured-badge::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--brass), transparent);
+    max-width: 80px;
+    margin-left: 6px;
   }
   .story-meta {
     font-size: 11px;
@@ -940,6 +962,69 @@
     color: var(--paper-mute);
     margin: 0 0 8px;
   }
+
+  /* Show-more affordance */
+  .show-more {
+    margin-top: 40px;
+    padding: 18px 28px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--paper);
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    width: 100%;
+    transition: all .2s ease;
+  }
+  .show-more:hover {
+    border-color: var(--brass);
+    color: var(--brass);
+    background: oklch(0.78 0.13 78 / 0.05);
+  }
+  .show-more b {
+    color: var(--brass);
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  /* Categories badge in story meta */
+  .story-cats {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-left: 8px;
+  }
+  .story-cat {
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 999px;
+    color: var(--paper-mute);
+    background: oklch(0.96 0.012 80 / 0.04);
+    border: 1px solid var(--line-soft);
+  }
+
+  /* Score display */
+  .score-pill {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 3px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--paper-mute);
+    margin-left: auto;
+  }
+  .score-pill b {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--brass);
+    font-size: 17px;
+  }
 </style>
 </head>
 <body>
@@ -956,14 +1041,15 @@
       <span>Maputo · 2026</span>
     </div>
     <div class="masthead-mid">
-      <h1>Sixteen<br>highland <em>winters</em><br>from Maputo.</h1>
-      <p class="standfirst">A personal field guide to cool, kid-friendly, malaria-free escapes within a day's drive. Photographed by strangers on Google Maps. Curated, then mapped.</p>
+      <h1>A field guide<br>to <em>weekending</em><br>from Maputo.</h1>
+      <p class="standfirst">Highland air. Lagoon water. Mall escapes. Malaria-free safari. The four-fingers-down Indian Ocean. Twenty-five places, sorted by how badly you'll want to go.</p>
     </div>
     <div class="masthead-bot">
       <div class="col">
         <span>South Africa</span>
         <span>Eswatini</span>
-        <span>16 places</span>
+        <span>Mozambique</span>
+        <span>25 places</span>
       </div>
       <span class="scroll-hint">
         Scroll to read
@@ -979,23 +1065,16 @@
   <div class="index-strip-inner">
     <div class="brand-mark">Escape <em>Maputo</em></div>
     <div class="filters">
-      <div class="filter-group" id="tier-filters">
-        <button class="chip active" data-tier="1">Tier I · &lt;4h</button>
-        <button class="chip active" data-tier="2">Tier II · 4–6h</button>
-        <button class="chip active" data-tier="3">Tier III · 7h+</button>
-        <button class="chip active" data-tier="urban">Urban</button>
-      </div>
+      <div class="filter-group" id="cat-filters"></div>
       <div class="filter-divider"></div>
       <div class="filter-group" id="flag-filters">
         <button class="chip" data-flag="malaria_free">Malaria-free</button>
-        <button class="chip" data-flag="kid5">Kid-friendly</button>
-        <button class="chip" data-flag="cheap">Affordable</button>
-        <button class="chip" data-flag="highland">Highland</button>
+        <button class="chip" data-flag="cheap">$ only</button>
       </div>
       <div class="filter-divider"></div>
       <div class="drive-row">
         <span class="drive-label">Max drive</span>
-        <input type="range" min="2" max="8" step="0.5" value="8" id="drive-max" class="drive-slider">
+        <input type="range" min="1" max="8" step="0.5" value="8" id="drive-max" class="drive-slider">
         <span class="drive-val" id="drive-val">8h</span>
       </div>
     </div>
@@ -1020,7 +1099,7 @@
 <!-- ========== COLOPHON ========== -->
 <footer class="colophon">
   <strong>Colophon</strong>
-  Hand-curated by Dedi for his family. Photographs courtesy of Google Maps contributors, individually credited. Map tiles by <a href="https://carto.com/" target="_blank" rel="noopener">CARTO</a> on <a href="https://openstreetmap.org" target="_blank" rel="noopener">OpenStreetMap</a> data. Set in Petrona and Hanken Grotesk. No tracking. No newsletter. <a href="https://github.com/galohot/maputo-irawan" target="_blank" rel="noopener">Source on GitHub.</a>
+  Hand-curated by Dedi for his family. <span id="colophon-count">25 places</span>, ranked by a hand-tweaked score that weights closeness, kid-friendliness, safety, cost, and pure desirability. Photographs courtesy of Google Maps contributors, individually credited. Map tiles by <a href="https://carto.com/" target="_blank" rel="noopener">CARTO</a> on <a href="https://openstreetmap.org" target="_blank" rel="noopener">OpenStreetMap</a> data. Set in Petrona and Hanken Grotesk. No tracking. No newsletter. <a href="https://github.com/galohot/maputo-irawan" target="_blank" rel="noopener">Source on GitHub.</a>
 </footer>
 
 </div>
@@ -1056,7 +1135,7 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="data.js?v=5"></script>
-<script src="app.js?v=5"></script>
+<script src="data.js?v=6"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>

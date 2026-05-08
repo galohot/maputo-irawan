@@ -1,82 +1,26 @@
-// Destinations dataset — high-ground, cooler, kid-friendly escapes from Maputo
+// Destinations dataset — escapes from Maputo
 // Maputo: -25.9692, 32.5732
+// Categories: highland | beach | wildlife | urban | family | nature | historic
+// Scores: 1.0–10.0, curated quality rating for the use case (Dedi + family + 1yo)
 window.MAPUTO_DEST = {
   origin: { name: "Maputo", lat: -25.9692, lon: 32.5732 },
 
+  categories: [
+    { id: "all",      label: "All",            icon: "○" },
+    { id: "featured", label: "Editor's picks", icon: "★" },
+    { id: "highland", label: "Highland",       icon: "▲" },
+    { id: "beach",    label: "Beach & coast",  icon: "≈" },
+    { id: "wildlife", label: "Wildlife",       icon: "◐" },
+    { id: "urban",    label: "Urban",          icon: "■" },
+    { id: "family",   label: "Family",         icon: "♥" },
+    { id: "nature",   label: "Nature",         icon: "❋" },
+    { id: "historic", label: "Historic",       icon: "✠" }
+  ],
+
   destinations: [
-    // ===== TIER 1: <4h drive =====
-    {
-      id: "dullstroom",
-      name: "Dullstroom",
-      country: "South Africa",
-      region: "Mpumalanga",
-      lat: -25.4167, lon: 30.1167,
-      altitude_m: 2076,
-      drive_h: 4.0,
-      tier: 1,
-      malaria_free: true,
-      kid_score: 5,
-      safety_score: 5,
-      cost_tier: 2, // 1=cheap, 2=mid, 3=upscale
-      vibe: ["highest cold town", "fireplace culture", "trout", "misty mornings"],
-      wiki: "Dullstroom",
-      blurb: "Over 2,000 m above sea level — one of South Africa's coldest towns. Quaint European-village aesthetic, fireplace pubs, trout dams.",
-      family_notes: [
-        "N4 toll road = smooth quiet ride for naps",
-        "Walkable main street, stroller-friendly",
-        "Halfway stop at Milly's (Machadodorp): lake view, clean facilities"
-      ],
-      season_peak: "Jun–Aug (winter)",
-      tags: ["highland", "winter", "village", "quaint"]
-    },
-    {
-      id: "malolotja",
-      name: "Malolotja Nature Reserve",
-      country: "Eswatini",
-      region: "Hhohho Highveld",
-      lat: -26.1333, lon: 31.1167,
-      altitude_m: 1700,
-      drive_h: 3.5,
-      tier: 1,
-      malaria_free: true,
-      kid_score: 5,
-      safety_score: 5,
-      cost_tier: 1,
-      vibe: ["raw mountains", "frosted valleys", "log cabins"],
-      wiki: "Malolotja_Nature_Reserve",
-      blurb: "Stark contrast to coastal humidity — raw, mountainous, crisp. Winter brings frost to the valleys.",
-      family_notes: [
-        "Self-catering log cabins with fireplaces",
-        "Scenic drives through the reserve — see blesbok, zebra from the car",
-        "No predators, peaceful, less commercialized"
-      ],
-      season_peak: "Jun–Aug",
-      tags: ["highland", "wildlife-no-predator", "reserve", "remote"]
-    },
-    {
-      id: "sabie",
-      name: "Sabie & Hazyview",
-      country: "South Africa",
-      region: "Mpumalanga",
-      lat: -25.0989, lon: 30.7831,
-      altitude_m: 1100,
-      drive_h: 3.5,
-      tier: 1,
-      malaria_free: true,
-      kid_score: 5,
-      safety_score: 5,
-      cost_tier: 2,
-      vibe: ["pine forests", "waterfalls", "European woodland"],
-      wiki: "Sabie",
-      blurb: "Deep pine forests — feels like European woodland. Cool and crisp rather than freezing. Famous for waterfalls (Mac Mac, Lone Creek).",
-      family_notes: [
-        "Most waterfalls have short paved paths from parking",
-        "Sabi River Sun: lawns, heated pools, baby-friendly",
-        "Easy carrier hikes — no real climbing needed"
-      ],
-      season_peak: "Apr–Sep",
-      tags: ["forest", "waterfalls", "family-resort"]
-    },
+    // ============================================================
+    // ORIGINAL HIGHLAND / WILDLIFE / URBAN SET
+    // ============================================================
     {
       id: "kaapsehoop",
       name: "Kaapsehoop",
@@ -90,6 +34,9 @@ window.MAPUTO_DEST = {
       kid_score: 5,
       safety_score: 4,
       cost_tier: 1,
+      score: 9.4,
+      featured: true,
+      categories: ["highland", "nature", "family"],
       vibe: ["wild horses", "mist forest", "escarpment edge"],
       wiki: "Kaapsehoop",
       blurb: "Tiny mist-shrouded village on a granite escarpment. Wild horses roam the streets. Mossy forest trails, dramatic cliffs, almost no traffic.",
@@ -98,8 +45,85 @@ window.MAPUTO_DEST = {
         "Short flat walks through indigenous forest",
         "Cool year-round; chilly nights even in summer"
       ],
-      season_peak: "Year-round (cooler than coast)",
-      tags: ["highland", "wild-horses", "village", "off-beat"]
+      season_peak: "Year-round (cooler than coast)"
+    },
+    {
+      id: "clarens",
+      name: "Clarens & Northern Drakensberg",
+      country: "South Africa",
+      region: "Free State",
+      lat: -28.5167, lon: 28.4167,
+      altitude_m: 1853,
+      drive_h: 8.0,
+      tier: 3,
+      malaria_free: true,
+      kid_score: 5,
+      safety_score: 5,
+      cost_tier: 3,
+      score: 9.4,
+      featured: true,
+      categories: ["highland", "historic", "family"],
+      vibe: ["sandstone village", "Maluti mountains", "snow-capped winter"],
+      wiki: "Clarens",
+      blurb: "Artistic sandstone village against the Maluti Mountains. Snow on the peaks in July–August. Upscale bakeries, galleries, deep relaxing winter.",
+      family_notes: [
+        "Break trip overnight in Joburg/Middelburg — too far for one day",
+        "Upmarket but family-friendly self-catering cottages",
+        "Best for week-long block leave, not weekends"
+      ],
+      season_peak: "Jun–Aug (snow possible)"
+    },
+    {
+      id: "dullstroom",
+      name: "Dullstroom",
+      country: "South Africa",
+      region: "Mpumalanga",
+      lat: -25.4167, lon: 30.1167,
+      altitude_m: 2076,
+      drive_h: 4.0,
+      tier: 1,
+      malaria_free: true,
+      kid_score: 5,
+      safety_score: 5,
+      cost_tier: 2,
+      score: 9.2,
+      featured: true,
+      categories: ["highland", "nature"],
+      vibe: ["highest cold town", "fireplace culture", "trout", "misty mornings"],
+      wiki: "Dullstroom",
+      blurb: "Over 2,000 m above sea level — one of South Africa's coldest towns. Quaint European-village aesthetic, fireplace pubs, trout dams.",
+      family_notes: [
+        "N4 toll road = smooth quiet ride for naps",
+        "Walkable main street, stroller-friendly",
+        "Halfway stop at Milly's (Machadodorp): lake view, clean facilities"
+      ],
+      season_peak: "Jun–Aug (winter)"
+    },
+    {
+      id: "pilanesberg",
+      name: "Pilanesberg National Park",
+      country: "South Africa",
+      region: "North West",
+      lat: -25.25, lon: 27.05,
+      altitude_m: 1100,
+      drive_h: 7.5,
+      tier: 3,
+      malaria_free: true,
+      kid_score: 5,
+      safety_score: 5,
+      cost_tier: 3,
+      score: 9.1,
+      featured: true,
+      categories: ["wildlife", "family"],
+      vibe: ["volcanic crater", "Big 5", "self-drive safari"],
+      wiki: "Pilanesberg_National_Park",
+      blurb: "Set in an extinct volcano crater. Dramatic landscape, true Big 5. Strictly malaria-free — huge relief with an infant.",
+      family_notes: [
+        "Self-drive at your own pace — return to lodge anytime",
+        "Excellent paved roads inside park",
+        "1h flight to Joburg + 2.5h drive beats 7h+ overland"
+      ],
+      season_peak: "May–Sep"
     },
     {
       id: "ezulwini",
@@ -114,6 +138,9 @@ window.MAPUTO_DEST = {
       kid_score: 5,
       safety_score: 5,
       cost_tier: 2,
+      score: 9.1,
+      featured: true,
+      categories: ["wildlife", "family", "highland"],
       vibe: ["valley of heaven", "craft markets", "tame wildlife"],
       wiki: "Mlilwane_Wildlife_Sanctuary",
       blurb: "Lush mountainous valley. Tourism hub of Eswatini — craft markets, resorts, rolling hills. Mlilwane sanctuary on doorstep.",
@@ -122,59 +149,8 @@ window.MAPUTO_DEST = {
         "Self-drive dirt roads, baby naps in car seat",
         "Walk the camp safely among tame wildlife"
       ],
-      season_peak: "May–Sep",
-      tags: ["wildlife-no-predator", "valley", "family-friendly"]
+      season_peak: "May–Sep"
     },
-    {
-      id: "mbabane",
-      name: "Mbabane",
-      country: "Eswatini",
-      region: "Hhohho",
-      lat: -26.3167, lon: 31.1333,
-      altitude_m: 1243,
-      drive_h: 3.0,
-      tier: 1,
-      malaria_free: true,
-      kid_score: 4,
-      safety_score: 5,
-      cost_tier: 2,
-      vibe: ["capital city", "cool air", "small-town feel"],
-      wiki: "Mbabane",
-      blurb: "Eswatini's capital perched in the Mdimba mountains. Small enough to feel like a town, modern enough for any errand. Cool, pleasant air.",
-      family_notes: [
-        "Mall + supermarkets for any baby supply runs",
-        "Quick highway to Ezulwini for day trips",
-        "Reliable healthcare access"
-      ],
-      season_peak: "Apr–Sep",
-      tags: ["urban", "highland", "convenience"]
-    },
-    {
-      id: "piggs-peak",
-      name: "Pigg's Peak",
-      country: "Eswatini",
-      region: "Hhohho NW",
-      lat: -25.9667, lon: 31.25,
-      altitude_m: 1280,
-      drive_h: 3.0,
-      tier: 1,
-      malaria_free: true,
-      kid_score: 4,
-      safety_score: 5,
-      cost_tier: 1,
-      vibe: ["mountain town", "Phophonyane Falls", "remote feel"],
-      wiki: "Pigg%27s_Peak",
-      blurb: "Sleepy mountain town in NW Eswatini. Gateway to Phophonyane Falls Nature Reserve and the Maguga Dam. Cool, quiet, vastly underrated.",
-      family_notes: [
-        "Phophonyane Falls Lodge: river-side tents and chalets",
-        "Quiet roads, easy nap drives",
-        "Border-easy via Lomahasha"
-      ],
-      season_peak: "Apr–Sep",
-      tags: ["highland", "waterfalls", "remote"]
-    },
-
-    // ===== TIER 2: 4–6h =====
     {
       id: "graskop",
       name: "Graskop & Panorama Route",
@@ -188,6 +164,9 @@ window.MAPUTO_DEST = {
       kid_score: 5,
       safety_score: 5,
       cost_tier: 2,
+      score: 8.9,
+      featured: true,
+      categories: ["highland", "nature", "family"],
       vibe: ["escarpment edge", "Blyde Canyon", "God's Window"],
       wiki: "Graskop",
       blurb: "Perched on the Drakensberg escarpment. Breathtaking drops — Blyde River Canyon, God's Window, Bourke's Luck Potholes — sharp mountain air.",
@@ -196,80 +175,59 @@ window.MAPUTO_DEST = {
         "Stroller or carrier — no real hike needed",
         "Pancake houses everywhere (Harrie's is iconic)"
       ],
-      season_peak: "Apr–Sep",
-      tags: ["escarpment", "viewpoints", "family-friendly"]
+      season_peak: "Apr–Sep"
     },
     {
-      id: "lydenburg",
-      name: "Lydenburg / Long Tom Pass",
-      country: "South Africa",
-      region: "Mpumalanga",
-      lat: -25.0958, lon: 30.4514,
-      altitude_m: 1456,
-      drive_h: 4.5,
-      tier: 2,
+      id: "malolotja",
+      name: "Malolotja Nature Reserve",
+      country: "Eswatini",
+      region: "Hhohho Highveld",
+      lat: -26.1333, lon: 31.1167,
+      altitude_m: 1700,
+      drive_h: 3.5,
+      tier: 1,
       malaria_free: true,
-      kid_score: 4,
-      safety_score: 4,
+      kid_score: 5,
+      safety_score: 5,
       cost_tier: 1,
-      vibe: ["historic town", "mountain pass", "trout rivers"],
-      wiki: "Lydenburg",
-      blurb: "Historic town on the Long Tom Pass — one of SA's highest tar roads (2,150 m summit). Cold winters, big-sky country, trout rivers nearby.",
+      score: 8.8,
+      featured: false,
+      categories: ["highland", "wildlife", "nature"],
+      vibe: ["raw mountains", "frosted valleys", "log cabins"],
+      wiki: "Malolotja_Nature_Reserve",
+      blurb: "Stark contrast to coastal humidity — raw, mountainous, crisp. Winter brings frost to the valleys.",
       family_notes: [
-        "Easy detour off the Dullstroom–Sabie route",
-        "Mount Anderson Ranch for true alpine feel",
-        "Long Tom summit viewpoint — kid-safe stop"
+        "Self-catering log cabins with fireplaces",
+        "Scenic drives through the reserve — see blesbok, zebra from the car",
+        "No predators, peaceful, less commercialized"
       ],
-      season_peak: "May–Aug",
-      tags: ["highland", "mountain-pass", "historic"]
+      season_peak: "Jun–Aug"
     },
     {
-      id: "pilgrims-rest",
-      name: "Pilgrim's Rest & Mount Sheba",
+      id: "sabie",
+      name: "Sabie & Hazyview",
       country: "South Africa",
       region: "Mpumalanga",
-      lat: -24.8917, lon: 30.7517,
-      altitude_m: 1200,
-      drive_h: 4.5,
-      tier: 2,
+      lat: -25.0989, lon: 30.7831,
+      altitude_m: 1100,
+      drive_h: 3.5,
+      tier: 1,
       malaria_free: true,
-      kid_score: 4,
-      safety_score: 4,
-      cost_tier: 2,
-      vibe: ["gold-rush village", "indigenous forest", "living museum"],
-      wiki: "Pilgrim%27s_Rest",
-      blurb: "Frozen-in-time gold-rush village (national monument). Mount Sheba forest reserve nearby — ancient yellowwoods, mountain mist, total quiet.",
-      family_notes: [
-        "Whole village is a walkable museum — strollers fine",
-        "Mount Sheba Hotel: forest cabins, indoor playroom",
-        "Pair with Graskop on same trip"
-      ],
-      season_peak: "Apr–Sep",
-      tags: ["historic", "forest", "highland"]
-    },
-    {
-      id: "wakkerstroom",
-      name: "Wakkerstroom",
-      country: "South Africa",
-      region: "Mpumalanga",
-      lat: -27.3528, lon: 30.1453,
-      altitude_m: 1880,
-      drive_h: 5.0,
-      tier: 2,
-      malaria_free: true,
-      kid_score: 4,
+      kid_score: 5,
       safety_score: 5,
       cost_tier: 2,
-      vibe: ["birding paradise", "wetlands", "alpine grassland"],
-      wiki: "Wakkerstroom",
-      blurb: "Tiny highland village (1,880 m) ringed by wetlands and grassland. Birding capital of SA, dead-quiet, sandstone cottages, brutal-cold winters.",
+      score: 8.7,
+      featured: false,
+      categories: ["nature", "family"],
+      vibe: ["pine forests", "waterfalls", "European woodland"],
+      wiki: "Sabie",
+      blurb: "Deep pine forests — feels like European woodland. Cool and crisp rather than freezing. Famous for waterfalls (Mac Mac, Lone Creek).",
       family_notes: [
-        "Wetland boardwalk = stroller-friendly birdwatching",
-        "Gauntlet of B&Bs with fireplaces",
-        "Skip if your toddler hates the cold — it bites"
+        "Most waterfalls have short paved paths from parking",
+        "Sabi River Sun: lawns, heated pools, baby-friendly",
+        "Easy carrier hikes — no real climbing needed"
       ],
-      season_peak: "Apr–Sep",
-      tags: ["highland", "birding", "village", "very-cold"]
+      season_peak: "Apr–Sep"
     },
     {
       id: "magoebaskloof",
@@ -284,6 +242,9 @@ window.MAPUTO_DEST = {
       kid_score: 5,
       safety_score: 4,
       cost_tier: 2,
+      score: 8.5,
+      featured: false,
+      categories: ["highland", "nature"],
       vibe: ["mountain province", "misty pine forest", "alpine-ish"],
       wiki: "Magoebaskloof",
       blurb: "Rolling green hills, dense misty pine forests, deep valleys. Smells of woodsmoke in winter. Charming Haenertsburg village at its heart.",
@@ -292,37 +253,8 @@ window.MAPUTO_DEST = {
         "Botanical gardens, slow pace",
         "Long drive — break overnight in Polokwane"
       ],
-      season_peak: "Apr–Sep",
-      tags: ["highland", "forest", "alpine-feel"]
+      season_peak: "Apr–Sep"
     },
-
-    // ===== TIER 3: 7h+ =====
-    {
-      id: "clarens",
-      name: "Clarens & Northern Drakensberg",
-      country: "South Africa",
-      region: "Free State",
-      lat: -28.5167, lon: 28.4167,
-      altitude_m: 1853,
-      drive_h: 8.0,
-      tier: 3,
-      malaria_free: true,
-      kid_score: 5,
-      safety_score: 5,
-      cost_tier: 3,
-      vibe: ["sandstone village", "Maluti mountains", "snow-capped winter"],
-      wiki: "Clarens",
-      blurb: "Artistic sandstone village against the Maluti Mountains. Snow on the peaks in July–August. Upscale bakeries, galleries, deep relaxing winter.",
-      family_notes: [
-        "Break trip overnight in Joburg/Middelburg — too far for one day",
-        "Upmarket but family-friendly self-catering cottages",
-        "Best for week-long block leave, not weekends"
-      ],
-      season_peak: "Jun–Aug (snow possible)",
-      tags: ["snow", "village", "winter-wonderland", "long-trip"]
-    },
-
-    // ===== URBAN ESCAPES =====
     {
       id: "pretoria",
       name: "Pretoria (Northern Suburbs)",
@@ -336,6 +268,9 @@ window.MAPUTO_DEST = {
       kid_score: 5,
       safety_score: 4,
       cost_tier: 3,
+      score: 8.5,
+      featured: false,
+      categories: ["urban", "family", "historic"],
       vibe: ["embassy capital", "leafy suburbs", "structured calm"],
       wiki: "Pretoria",
       blurb: "Quieter, more structured than Joburg. Embassy-heavy, secure, leafy suburbs (Waterkloof, Brooklyn). Crisp winter air, jacaranda streets.",
@@ -344,8 +279,7 @@ window.MAPUTO_DEST = {
         "Top pediatric facilities at hand",
         "1h flight + 40min transfer beats the 5.5h drive"
       ],
-      season_peak: "Year-round (cool May–Aug)",
-      tags: ["urban", "highland", "convenience", "leafy"]
+      season_peak: "Year-round (cool May–Aug)"
     },
     {
       id: "joburg-sandton",
@@ -360,25 +294,293 @@ window.MAPUTO_DEST = {
       kid_score: 5,
       safety_score: 4,
       cost_tier: 3,
+      score: 8.5,
+      featured: false,
+      categories: ["urban", "family"],
       vibe: ["cosmopolitan", "luxury enclaves", "indoor everything"],
       wiki: "Sandton",
       blurb: "Fast, cosmopolitan, highly developed. Stick to the wealthy northern enclaves: Sandton, Rosebank, Melrose Arch — curated, secure, luxurious.",
       family_notes: [
         "Melrose Arch: pedestrian-only, walk to restaurants safely",
-        "Premium indoor play areas for cold/rainy days",
-        "Healthcare: Netcare Sunninghill, Sandton MediClinic"
+        "Sandton City + Mall of Africa for any errand",
+        "Premium indoor play areas for cold/rainy days"
       ],
-      season_peak: "Year-round",
-      tags: ["urban", "luxury", "indoor", "convenience"]
+      season_peak: "Year-round"
+    },
+    {
+      id: "pilgrims-rest",
+      name: "Pilgrim's Rest & Mount Sheba",
+      country: "South Africa",
+      region: "Mpumalanga",
+      lat: -24.8917, lon: 30.7517,
+      altitude_m: 1200,
+      drive_h: 4.5,
+      tier: 2,
+      malaria_free: true,
+      kid_score: 4,
+      safety_score: 4,
+      cost_tier: 2,
+      score: 8.4,
+      featured: false,
+      categories: ["historic", "highland", "nature"],
+      vibe: ["gold-rush village", "indigenous forest", "living museum"],
+      wiki: "Pilgrim%27s_Rest",
+      blurb: "Frozen-in-time gold-rush village (national monument). Mount Sheba forest reserve nearby — ancient yellowwoods, mountain mist, total quiet.",
+      family_notes: [
+        "Whole village is a walkable museum — strollers fine",
+        "Mount Sheba Hotel: forest cabins, indoor playroom",
+        "Pair with Graskop on same trip"
+      ],
+      season_peak: "Apr–Sep"
+    },
+    {
+      id: "mbabane",
+      name: "Mbabane",
+      country: "Eswatini",
+      region: "Hhohho",
+      lat: -26.3167, lon: 31.1333,
+      altitude_m: 1243,
+      drive_h: 3.0,
+      tier: 1,
+      malaria_free: true,
+      kid_score: 4,
+      safety_score: 5,
+      cost_tier: 2,
+      score: 8.0,
+      featured: false,
+      categories: ["urban", "highland"],
+      vibe: ["capital city", "cool air", "small-town feel"],
+      wiki: "Mbabane",
+      blurb: "Eswatini's capital perched in the Mdimba mountains. Small enough to feel like a town, modern enough for any errand. Cool, pleasant air.",
+      family_notes: [
+        "Mall + supermarkets for any baby supply runs",
+        "Quick highway to Ezulwini for day trips",
+        "Reliable healthcare access"
+      ],
+      season_peak: "Apr–Sep"
+    },
+    {
+      id: "lydenburg",
+      name: "Lydenburg & Long Tom Pass",
+      country: "South Africa",
+      region: "Mpumalanga",
+      lat: -25.0958, lon: 30.4514,
+      altitude_m: 1456,
+      drive_h: 4.5,
+      tier: 2,
+      malaria_free: true,
+      kid_score: 4,
+      safety_score: 4,
+      cost_tier: 1,
+      score: 7.8,
+      featured: false,
+      categories: ["highland", "historic"],
+      vibe: ["historic town", "mountain pass", "trout rivers"],
+      wiki: "Lydenburg",
+      blurb: "Historic town on the Long Tom Pass — one of SA's highest tar roads (2,150 m summit). Cold winters, big-sky country, trout rivers nearby.",
+      family_notes: [
+        "Easy detour off the Dullstroom–Sabie route",
+        "Mount Anderson Ranch for true alpine feel",
+        "Long Tom summit viewpoint — kid-safe stop"
+      ],
+      season_peak: "May–Aug"
+    },
+    {
+      id: "wakkerstroom",
+      name: "Wakkerstroom",
+      country: "South Africa",
+      region: "Mpumalanga",
+      lat: -27.3528, lon: 30.1453,
+      altitude_m: 1880,
+      drive_h: 5.0,
+      tier: 2,
+      malaria_free: true,
+      kid_score: 4,
+      safety_score: 5,
+      cost_tier: 2,
+      score: 7.7,
+      featured: false,
+      categories: ["highland", "nature"],
+      vibe: ["birding paradise", "wetlands", "alpine grassland"],
+      wiki: "Wakkerstroom",
+      blurb: "Tiny highland village (1,880 m) ringed by wetlands and grassland. Birding capital of SA, dead-quiet, sandstone cottages, brutal-cold winters.",
+      family_notes: [
+        "Wetland boardwalk = stroller-friendly birdwatching",
+        "Gauntlet of B&Bs with fireplaces",
+        "Skip if your toddler hates the cold — it bites"
+      ],
+      season_peak: "Apr–Sep"
+    },
+    {
+      id: "piggs-peak",
+      name: "Pigg's Peak",
+      country: "Eswatini",
+      region: "Hhohho NW",
+      lat: -25.9667, lon: 31.25,
+      altitude_m: 1280,
+      drive_h: 3.0,
+      tier: 1,
+      malaria_free: true,
+      kid_score: 4,
+      safety_score: 5,
+      cost_tier: 1,
+      score: 7.6,
+      featured: false,
+      categories: ["highland", "nature"],
+      vibe: ["mountain town", "Phophonyane Falls", "remote feel"],
+      wiki: "Pigg%27s_Peak",
+      blurb: "Sleepy mountain town in NW Eswatini. Gateway to Phophonyane Falls Nature Reserve and the Maguga Dam. Cool, quiet, vastly underrated.",
+      family_notes: [
+        "Phophonyane Falls Lodge: river-side tents and chalets",
+        "Quiet roads, easy nap drives",
+        "Border-easy via Lomahasha"
+      ],
+      season_peak: "Apr–Sep"
     },
 
-    // ===== WILDLIFE (malaria-free) =====
+    // ============================================================
+    // MOZAMBIQUE — beach & coast escapes near Maputo
+    // ============================================================
     {
-      id: "pilanesberg",
-      name: "Pilanesberg National Park",
+      id: "macaneta",
+      name: "Macaneta",
+      country: "Mozambique",
+      region: "Maputo Province",
+      lat: -25.7283, lon: 32.7500,
+      altitude_m: 5,
+      drive_h: 1.0,
+      tier: 1,
+      malaria_free: false,
+      kid_score: 5,
+      safety_score: 4,
+      cost_tier: 1,
+      score: 9.0,
+      featured: true,
+      categories: ["beach", "family"],
+      vibe: ["Maputo's nearest beach", "lagoon", "weekend regular"],
+      wiki: "Macaneta",
+      blurb: "The Maputo classic — long sand peninsula 45 minutes north of the city. Calm lagoon on one side, ocean on the other. Where locals decompress.",
+      family_notes: [
+        "Closest decent beach to home — under an hour door to sand",
+        "Calm lagoon side is safe for toddler paddling",
+        "Lodges like Macaneta Holiday Resort have shaded grass + pools"
+      ],
+      season_peak: "Apr–Oct (cooler, less rain)"
+    },
+    {
+      id: "ponta-do-ouro",
+      name: "Ponta do Ouro",
+      country: "Mozambique",
+      region: "Maputo Province (south)",
+      lat: -26.8467, lon: 32.8950,
+      altitude_m: 10,
+      drive_h: 2.5,
+      tier: 1,
+      malaria_free: false,
+      kid_score: 4,
+      safety_score: 4,
+      cost_tier: 2,
+      score: 9.0,
+      featured: true,
+      categories: ["beach", "wildlife"],
+      vibe: ["dolphin coast", "pristine sand", "south-facing border town"],
+      wiki: "Ponta_do_Ouro",
+      blurb: "Where Mozambique meets KwaZulu-Natal. A protected coastal reserve, swim-with-dolphins capital of southern Africa, and the most scenic stretch of beach within easy reach of Maputo.",
+      family_notes: [
+        "4x4 helpful but tar road now reaches close",
+        "Calm bay end is fine for toddlers; main beach has dolphins",
+        "Stay at Tartaruga Lodge / Sahara Beach for family setups"
+      ],
+      season_peak: "May–Sep (whale season Jul–Oct)"
+    },
+    {
+      id: "bilene",
+      name: "Praia do Bilene",
+      country: "Mozambique",
+      region: "Gaza Province",
+      lat: -25.2647, lon: 33.2406,
+      altitude_m: 5,
+      drive_h: 2.5,
+      tier: 1,
+      malaria_free: false,
+      kid_score: 5,
+      safety_score: 4,
+      cost_tier: 2,
+      score: 8.8,
+      featured: true,
+      categories: ["beach", "family"],
+      vibe: ["natural lagoon", "calm water", "tropical dreamscape"],
+      wiki: "Bilene",
+      blurb: "A vast turquoise lagoon separated from the ocean by a thin dune wall. Calmer and clearer than any open beach — purpose-built for families with small kids.",
+      family_notes: [
+        "Lagoon is shallow, no waves, no current — ideal for first beach trip",
+        "Drive on tar all the way; no 4x4 needed",
+        "Complexo Palmeiras + Laguna Lodge are the family staples"
+      ],
+      season_peak: "Apr–Oct"
+    },
+    {
+      id: "inhaca",
+      name: "Inhaca Island",
+      country: "Mozambique",
+      region: "Maputo Bay",
+      lat: -25.9833, lon: 32.9667,
+      altitude_m: 5,
+      drive_h: 0.7,
+      tier: 1,
+      malaria_free: false,
+      kid_score: 4,
+      safety_score: 4,
+      cost_tier: 2,
+      score: 8.5,
+      featured: false,
+      categories: ["beach", "wildlife", "nature"],
+      vibe: ["marine reserve", "ferry ride", "snorkeling"],
+      wiki: "Inhaca_Island",
+      blurb: "A 90-minute ferry from Maputo gives you tropical island air, mangrove forests, a marine biology station, and untouched beaches. Day trip or overnight.",
+      family_notes: [
+        "Boat ride is its own adventure for a toddler",
+        "Inhaca Lodge has pool + shaded loungers",
+        "Snorkel/glass-bottom boat tours visible from shore"
+      ],
+      season_peak: "Apr–Oct"
+    },
+    {
+      id: "maputo-special-reserve",
+      name: "Maputo Special Reserve",
+      country: "Mozambique",
+      region: "Maputo Province",
+      lat: -26.4500, lon: 32.7000,
+      altitude_m: 30,
+      drive_h: 2.0,
+      tier: 1,
+      malaria_free: false,
+      kid_score: 4,
+      safety_score: 4,
+      cost_tier: 2,
+      score: 8.6,
+      featured: false,
+      categories: ["wildlife", "nature"],
+      vibe: ["coastal elephants", "wetlands", "rewilding success"],
+      wiki: "Maputo_Special_Reserve",
+      blurb: "A massive coastal park 90 minutes south of Maputo. Elephants, hippos, giraffes, and an empty Indian-Ocean shoreline that meets Ponta do Ouro to the south.",
+      family_notes: [
+        "Self-drive in own vehicle (4x4 recommended in summer)",
+        "Anvil Bay / Machangulo lodges are family-tier",
+        "Combine with Ponta do Ouro for a full week"
+      ],
+      season_peak: "May–Sep"
+    },
+
+    // ============================================================
+    // KIDS — zoos, theme parks, water parks
+    // ============================================================
+    {
+      id: "sun-city",
+      name: "Sun City & Valley of Waves",
       country: "South Africa",
       region: "North West",
-      lat: -25.25, lon: 27.05,
+      lat: -25.3417, lon: 27.0936,
       altitude_m: 1100,
       drive_h: 7.5,
       tier: 3,
@@ -386,16 +588,96 @@ window.MAPUTO_DEST = {
       kid_score: 5,
       safety_score: 5,
       cost_tier: 3,
-      vibe: ["volcanic crater", "Big 5", "self-drive safari"],
-      wiki: "Pilanesberg_National_Park",
-      blurb: "Set in an extinct volcano crater. Dramatic landscape, true Big 5. Strictly malaria-free — huge relief with an infant.",
+      score: 8.9,
+      featured: true,
+      categories: ["family", "wildlife"],
+      vibe: ["water park", "Lost City", "kid-engineered"],
+      wiki: "Sun_City,_North_West",
+      blurb: "Engineered to be a child's dream. Wave pool, lazy river, mini-golf, animal encounters, and the hyperbolic Lost City Hotel. Pair it with Pilanesberg next door for a full week.",
       family_notes: [
-        "Self-drive at your own pace — return to lodge anytime",
-        "Excellent paved roads inside park",
-        "1h flight to Joburg + 2.5h drive beats 7h+ overland"
+        "Valley of Waves: kid splash zone separate from big slides",
+        "On-site stays mean no driving with a tired toddler",
+        "Fly to Joburg + 2.5h drive — same as Pilanesberg"
       ],
-      season_peak: "May–Sep",
-      tags: ["safari", "big5", "malaria-free", "volcanic"]
+      season_peak: "Apr–Oct"
+    },
+    {
+      id: "joburg-zoo",
+      name: "Joburg Zoo & Cradle of Humankind",
+      country: "South Africa",
+      region: "Gauteng",
+      lat: -26.1612, lon: 28.0419,
+      altitude_m: 1700,
+      drive_h: 5.5,
+      tier: "urban",
+      malaria_free: true,
+      kid_score: 5,
+      safety_score: 4,
+      cost_tier: 2,
+      score: 8.4,
+      featured: false,
+      categories: ["family", "urban", "wildlife"],
+      vibe: ["classic city zoo", "Lion Park", "Cradle of Humankind"],
+      wiki: "Johannesburg_Zoo",
+      blurb: "Pair the Joburg Zoo (classic, walkable, well-shaded) with the nearby Lion & Safari Park and the Maropeng / Sterkfontein caves at the Cradle of Humankind. Half a week of pure kid content.",
+      family_notes: [
+        "Zoo: 4–5 hours, paved, stroller-perfect",
+        "Lion & Safari Park: drive-through with cubs (book early)",
+        "Maropeng museum: hands-on interactive at toddler height"
+      ],
+      season_peak: "Year-round"
+    },
+    {
+      id: "mantenga",
+      name: "Mantenga Cultural Village",
+      country: "Eswatini",
+      region: "Ezulwini",
+      lat: -26.4500, lon: 31.2083,
+      altitude_m: 700,
+      drive_h: 3.2,
+      tier: 1,
+      malaria_free: true,
+      kid_score: 5,
+      safety_score: 5,
+      cost_tier: 1,
+      score: 8.0,
+      featured: false,
+      categories: ["family", "historic"],
+      vibe: ["live cultural village", "traditional dance", "waterfall walk"],
+      wiki: "Mantenga_Nature_Reserve",
+      blurb: "A reconstructed traditional Swazi homestead with daily dance and music, set in a forest reserve with a 95m waterfall. The most kid-engaging stop in Eswatini.",
+      family_notes: [
+        "Daily Sibhaca dance show: rhythm hypnotises toddlers",
+        "Short flat walk to the falls viewpoint",
+        "Pair with Mlilwane / Royal Swazi Spa for the day"
+      ],
+      season_peak: "Year-round"
+    },
+    {
+      id: "nelspruit",
+      name: "Nelspruit / Mbombela",
+      country: "South Africa",
+      region: "Mpumalanga",
+      lat: -25.4753, lon: 30.9694,
+      altitude_m: 671,
+      drive_h: 3.5,
+      tier: 1,
+      malaria_free: true,
+      kid_score: 4,
+      safety_score: 4,
+      cost_tier: 2,
+      score: 8.0,
+      featured: false,
+      categories: ["urban", "family"],
+      vibe: ["lowveld capital", "Riverside Mall", "Kruger gateway"],
+      wiki: "Mbombela",
+      blurb: "The biggest city between Maputo and Joburg. Riverside Mall, large supermarkets, hospitals, and a relaxed lowveld feel. The most useful pit-stop on the N4.",
+      family_notes: [
+        "Big malls (Riverside, Ilanga) for any errand",
+        "Lowveld Botanical Garden: shaded, paved, riverside",
+        "Mediclinic Nelspruit if anything goes wrong with the toddler"
+      ],
+      season_peak: "May–Sep (cooler & dry)"
     }
   ]
 };

@@ -8,7 +8,7 @@
   let PHOTOS = {};
 
   // -------- Boot --------
-  fetch('photos.json?v=5')
+  fetch('photos.json?v=6')
     .then((r) => r.json())
     .then((p) => {
       PHOTOS = p;
@@ -29,7 +29,7 @@
     });
 
   // -------- Hero (rotating featured photo) --------
-  const HERO_PICKS = ['kaapsehoop', 'malolotja', 'graskop', 'clarens', 'pilgrims-rest', 'mbabane'];
+  const HERO_PICKS = ['kaapsehoop', 'macaneta', 'graskop', 'clarens', 'ponta-do-ouro', 'pilanesberg', 'bilene'];
   function renderHero() {
     const el = document.getElementById('hero-photo');
     const credit = document.getElementById('hero-credit');
@@ -53,43 +53,59 @@
     img.src = ph.src;
   }
 
-  // -------- Tier helpers --------
+  // -------- Helpers --------
   function tierKey(d) { return d.tier === 'urban' ? 'tu' : 't' + d.tier; }
   function escapeName(name) {
-    // Split on common separators, render delimiters in italic brass for editorial feel
     return name
       .replace(/ & /g, '<span class="hand-amp"> &amp; </span>')
-      .replace(/ — /g, '<span class="hand-sep"> — </span>')
-      .replace(/ \/ /g, '<span class="hand-sep"> / </span>');
+      .replace(/ \/ /g, '<span class="hand-sep"> / </span>')
+      .replace(/ · /g, '<span class="hand-sep"> · </span>');
   }
-  function tierLabel(d) {
-    return d.tier === 'urban' ? 'Urban escape' :
-           d.tier === 1 ? 'Tier I · under 4h' :
-           d.tier === 2 ? 'Tier II · 4 to 6h' :
-                          'Tier III · 7h or more';
+  function categoryById(id) {
+    return DATA.categories.find((c) => c.id === id) || { label: id, icon: '·' };
   }
-  function pad(n) { return String(n).padStart(2, '0'); }
+  function categoryLabel(d) {
+    if (!d.categories || !d.categories.length) return 'Escape';
+    return d.categories.slice(0, 2).map((c) => categoryById(c).label).join(' · ');
+  }
+  function tierLabelShort(d) {
+    if (d.drive_h <= 1.5) return 'Day-trip · ' + d.drive_h + 'h';
+    if (d.drive_h <= 4) return 'Weekend · ' + d.drive_h + 'h';
+    if (d.drive_h <= 6) return 'Long weekend · ' + d.drive_h + 'h';
+    return 'Block leave · ' + d.drive_h + 'h';
+  }
 
   // -------- Filter state --------
+  const PAGE_SIZE = 8;
   const state = {
-    tiers: new Set(['1', '2', '3', 'urban']),
+    cat: 'featured',     // single-select category
     flags: new Set(),
     driveMax: 8,
+    showAll: false,
   };
 
-  document.querySelectorAll('#tier-filters .chip').forEach((el) => {
+  // Build category chips
+  const catRoot = document.getElementById('cat-filters');
+  catRoot.innerHTML = DATA.categories.map((c) => `
+    <button class="chip cat${c.id === state.cat ? ' active' : ''}" data-cat="${c.id}">
+      <span class="icon">${c.icon}</span>${c.label}
+    </button>
+  `).join('');
+  catRoot.querySelectorAll('.chip').forEach((el) => {
     el.addEventListener('click', () => {
-      const t = el.dataset.tier;
-      state.tiers.has(t) ? state.tiers.delete(t) : state.tiers.add(t);
-      el.classList.toggle('active');
+      state.cat = el.dataset.cat;
+      state.showAll = false;
+      catRoot.querySelectorAll('.chip').forEach((c) => c.classList.toggle('active', c === el));
       renderStories();
     });
   });
+
   document.querySelectorAll('#flag-filters .chip').forEach((el) => {
     el.addEventListener('click', () => {
       const f = el.dataset.flag;
       state.flags.has(f) ? state.flags.delete(f) : state.flags.add(f);
       el.classList.toggle('active');
+      state.showAll = false;
       renderStories();
     });
   });
@@ -98,40 +114,60 @@
   driveSlider.addEventListener('input', () => {
     state.driveMax = parseFloat(driveSlider.value);
     driveVal.textContent = state.driveMax + 'h';
+    state.showAll = false;
     renderStories();
   });
 
   function passes(d) {
-    if (!state.tiers.has(String(d.tier))) return false;
+    if (state.cat === 'featured' && !d.featured) return false;
+    if (state.cat !== 'all' && state.cat !== 'featured') {
+      if (!d.categories || !d.categories.includes(state.cat)) return false;
+    }
     if (d.drive_h > state.driveMax) return false;
     if (state.flags.has('malaria_free') && !d.malaria_free) return false;
-    if (state.flags.has('kid5') && d.kid_score < 5) return false;
     if (state.flags.has('cheap') && d.cost_tier > 1) return false;
-    if (state.flags.has('highland') && d.altitude_m < 1300) return false;
     return true;
   }
 
   // -------- Stories --------
   function renderStories() {
-    const visible = DESTS.filter(passes).sort((a, b) => a.drive_h - b.drive_h);
+    // Sort by score descending; tiebreak by drive time ascending
+    const visible = DESTS.filter(passes).sort(
+      (a, b) => (b.score || 0) - (a.score || 0) || a.drive_h - b.drive_h
+    );
     document.getElementById('count').textContent = visible.length;
     const root = document.getElementById('stories');
     if (visible.length === 0) {
-      root.innerHTML = `<div class="empty"><h3>Nothing matches.</h3><p>Loosen the filters above.</p></div>`;
+      root.innerHTML = `<div class="empty"><h3>Nothing matches.</h3><p>Loosen the filters above, or pick a different category.</p></div>`;
       syncMarkers([]);
       return;
     }
+    const showCount = state.showAll ? visible.length : Math.min(PAGE_SIZE, visible.length);
     root.innerHTML = '';
-    visible.forEach((d, i) => {
+    visible.slice(0, showCount).forEach((d) => {
       const photoSet = (PHOTOS[d.id] && PHOTOS[d.id].photos) || [];
       const meta = PHOTOS[d.id] || {};
-      root.appendChild(buildStory(d, i + 1, photoSet, meta));
+      root.appendChild(buildStory(d, photoSet, meta));
     });
+
+    if (showCount < visible.length) {
+      const more = document.createElement('button');
+      more.className = 'show-more';
+      more.innerHTML = `Show <b>${visible.length - showCount}</b> more place${visible.length - showCount === 1 ? '' : 's'}`;
+      more.addEventListener('click', () => {
+        state.showAll = true;
+        renderStories();
+        // Smoothly bring user just past the button
+        setTimeout(() => more.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      });
+      root.appendChild(more);
+    }
+
     syncMarkers(visible);
     setTimeout(armReveal, 50);
   }
 
-  function buildStory(d, num, photos, meta) {
+  function buildStory(d, photos, meta) {
     const el = document.createElement('article');
     el.className = 'story anim';
     el.id = 'story-' + d.id;
@@ -198,17 +234,24 @@
       </div>
     `;
 
+    const featuredBadge = d.featured
+      ? `<div class="featured-badge">Editor's pick</div>` : '';
+
+    const catChips = (d.categories || [])
+      .map((c) => `<span class="story-cat">${categoryById(c).label}</span>`)
+      .join('');
+
     el.innerHTML = `
       <header class="story-head">
-        <div class="story-num">${pad(num)}</div>
-        <div>
-          <div class="story-meta">
-            <span class="tier-pill ${tierKey(d)}">${tierLabel(d)}</span>
-            ${d.malaria_free ? 'Malaria-free' : ''}
-          </div>
-          <h2>${escapeName(d.name)}</h2>
-          <div class="story-loc">${d.region}, ${d.country}</div>
+        ${featuredBadge}
+        <div class="story-meta" style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">
+          <span>${tierLabelShort(d)}</span>
+          ${d.malaria_free ? '<span style="color:var(--moss)">· Malaria-free</span>' : '<span style="color:var(--rose)">· Malaria zone</span>'}
+          <span class="story-cats">${catChips}</span>
+          <span class="score-pill"><b>${(d.score || 0).toFixed(1)}</b><span>/10</span></span>
         </div>
+        <h2>${escapeName(d.name)}</h2>
+        <div class="story-loc">${d.region}, ${d.country}</div>
       </header>
       ${photoCluster}
       ${stats}
