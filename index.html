@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+<title>Escape Maputo — High-Ground, Cool & Kid-Friendly Getaways</title>
+<meta name="description" content="Curated map of cool, safe, kid-friendly weekend and holiday escapes from Maputo: South Africa & Eswatini highland towns, malaria-free safaris, urban breaks.">
+<meta property="og:title" content="Escape Maputo">
+<meta property="og:description" content="High-ground, kid-friendly escapes from Maputo. Map · photos · drive times · vibes.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://maputo.irawan.pro">
+<meta name="theme-color" content="#0b1220">
+
+<link rel="preconnect" href="https://en.wikipedia.org">
+<link rel="preconnect" href="https://upload.wikimedia.org">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  :root {
+    --bg: #0b1220;
+    --bg-elev: #111a2c;
+    --bg-card: #16223a;
+    --line: #1f2d4a;
+    --text: #eef2ff;
+    --muted: #8896b8;
+    --accent: #5fa8ff;
+    --t1: #56d3b3;
+    --t2: #f0b657;
+    --t3: #d9637a;
+    --tu: #b48cf5;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text",
+      "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .app { display: grid; height: 100vh; grid-template-columns: 380px 1fr; }
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+    .map { order: 1; }
+    .sidebar { display: none; }
+    .app.show-list .sidebar { display: flex; position: absolute; inset: 0; z-index: 1100; background: var(--bg); }
+    .app.show-list .map { display: none; }
+  }
+
+  .sidebar {
+    display: flex; flex-direction: column;
+    background: var(--bg-elev);
+    border-right: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .header {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .header h1 {
+    margin: 0 0 4px; font-size: 19px; letter-spacing: -0.2px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .header h1 .pin { color: var(--accent); }
+  .header .sub {
+    color: var(--muted); font-size: 12.5px; line-height: 1.45;
+  }
+  .header .origin {
+    margin-top: 8px; font-size: 12px; color: var(--muted);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .header .origin b { color: var(--text); }
+
+  .filters {
+    padding: 12px 16px; border-bottom: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .filter-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    border: 1px solid var(--line); background: transparent;
+    color: var(--muted); font: inherit; font-size: 12px;
+    padding: 5px 11px; border-radius: 999px; cursor: pointer;
+    transition: all .15s ease;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--text); }
+  .chip.active {
+    background: var(--accent); border-color: var(--accent);
+    color: #001428; font-weight: 600;
+  }
+  .chip.tier-1.active { background: var(--t1); border-color: var(--t1); }
+  .chip.tier-2.active { background: var(--t2); border-color: var(--t2); }
+  .chip.tier-3.active { background: var(--t3); border-color: var(--t3); }
+  .chip.tier-urban.active { background: var(--tu); border-color: var(--tu); }
+  .filter-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .8px;
+    color: var(--muted); margin-bottom: 2px;
+  }
+  .drive-row { display: flex; align-items: center; gap: 10px; }
+  .drive-row input { flex: 1; }
+  .drive-row .drive-val {
+    min-width: 64px; text-align: right; font-variant-numeric: tabular-nums;
+    font-size: 12px; color: var(--text);
+  }
+
+  .list {
+    flex: 1; overflow-y: auto; padding: 8px;
+    scrollbar-width: thin; scrollbar-color: var(--line) transparent;
+  }
+  .list::-webkit-scrollbar { width: 8px; }
+  .list::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+  .card {
+    display: grid; grid-template-columns: 64px 1fr; gap: 10px;
+    padding: 10px; border-radius: 10px;
+    background: var(--bg-card); border: 1px solid transparent;
+    cursor: pointer; transition: all .15s ease;
+    margin-bottom: 6px;
+  }
+  .card:hover { border-color: var(--line); transform: translateX(2px); }
+  .card.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(95,168,255,.15); }
+  .card .thumb {
+    width: 64px; height: 64px; border-radius: 8px; overflow: hidden;
+    background: linear-gradient(135deg, #1f2d4a, #2a3a5e);
+    position: relative;
+  }
+  .card .thumb img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block; opacity: 0; transition: opacity .3s;
+  }
+  .card .thumb img.loaded { opacity: 1; }
+  .card .thumb img.loaded ~ .placeholder { display: none; }
+  .card .thumb .placeholder {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    font-size: 22px; color: rgba(255,255,255,.4);
+  }
+  .card .body { min-width: 0; }
+  .card .title-row {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 2px;
+  }
+  .card h3 {
+    margin: 0; font-size: 14.5px; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .tier-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex: 0 0 8px;
+  }
+  .tier-dot.t1 { background: var(--t1); }
+  .tier-dot.t2 { background: var(--t2); }
+  .tier-dot.t3 { background: var(--t3); }
+  .tier-dot.tu { background: var(--tu); }
+  .card .meta {
+    font-size: 11.5px; color: var(--muted);
+    display: flex; flex-wrap: wrap; gap: 4px 8px;
+  }
+  .card .meta span { white-space: nowrap; }
+  .empty {
+    text-align: center; padding: 40px 20px; color: var(--muted);
+    font-size: 13px;
+  }
+
+  .map { position: relative; }
+  #map { width: 100%; height: 100%; background: #0b1220; }
+  .leaflet-container { background: #0b1220 !important; }
+  .leaflet-popup-content-wrapper {
+    background: var(--bg-elev); color: var(--text); border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  }
+  .leaflet-popup-tip { background: var(--bg-elev); }
+  .leaflet-popup-content { margin: 10px 12px; font-size: 13px; }
+  .leaflet-popup-close-button { color: var(--muted) !important; }
+
+  .pin-marker {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,.5);
+    display: grid; place-items: center; font-size: 12px; color: #fff;
+    font-weight: 700; cursor: pointer;
+  }
+  .pin-marker.t1 { background: var(--t1); }
+  .pin-marker.t2 { background: var(--t2); color: #2a1e00; }
+  .pin-marker.t3 { background: var(--t3); }
+  .pin-marker.tu { background: var(--tu); }
+  .pin-marker.origin {
+    background: var(--accent); width: 36px; height: 36px;
+    font-size: 14px; color: #001428;
+  }
+
+  .mobile-toggle {
+    display: none; position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%); z-index: 1200;
+    background: var(--accent); color: #001428;
+    padding: 10px 18px; border-radius: 999px; font-weight: 600;
+    border: none; cursor: pointer; font-size: 13px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  }
+  @media (max-width: 900px) { .mobile-toggle { display: block; } }
+
+  .drawer {
+    position: fixed; right: 0; top: 0; bottom: 0; width: 460px; max-width: 100vw;
+    background: var(--bg-elev); border-left: 1px solid var(--line);
+    transform: translateX(100%); transition: transform .25s ease;
+    z-index: 1500; overflow-y: auto;
+    box-shadow: -8px 0 32px rgba(0,0,0,.4);
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-close {
+    position: sticky; top: 0; right: 0; z-index: 10;
+    float: right; margin: 10px; padding: 6px 10px;
+    background: rgba(0,0,0,.4); color: #fff; border: none;
+    border-radius: 6px; cursor: pointer; font-size: 14px;
+  }
+  .hero {
+    width: 100%; aspect-ratio: 16/9; object-fit: cover;
+    background: linear-gradient(135deg, #1f2d4a, #2a3a5e);
+    display: block;
+  }
+  .hero-fallback {
+    width: 100%; aspect-ratio: 16/9;
+    background: linear-gradient(135deg, var(--bg-card), var(--bg-elev));
+    display: grid; place-items: center;
+    color: var(--muted); font-size: 14px;
+  }
+  .drawer-body { padding: 18px 22px 40px; }
+  .drawer-body h2 { margin: 0 0 4px; font-size: 22px; letter-spacing: -0.3px; }
+  .drawer-body .loc {
+    color: var(--muted); font-size: 13px; margin-bottom: 14px;
+    display: flex; flex-wrap: wrap; gap: 4px 10px;
+  }
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+    margin: 14px 0 18px;
+  }
+  .stat {
+    background: var(--bg-card); padding: 9px 11px; border-radius: 8px;
+    border: 1px solid var(--line);
+  }
+  .stat .k { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .stat .v { font-size: 14px; font-weight: 600; margin-top: 2px; }
+  .blurb { line-height: 1.6; color: #d8e0f0; margin-bottom: 16px; }
+  .section-title {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .8px;
+    color: var(--muted); margin: 18px 0 8px;
+  }
+  .notes { margin: 0; padding: 0; list-style: none; }
+  .notes li {
+    padding: 8px 0 8px 22px; position: relative;
+    border-bottom: 1px dashed var(--line); line-height: 1.5;
+  }
+  .notes li:last-child { border-bottom: none; }
+  .notes li::before {
+    content: "→"; position: absolute; left: 0; color: var(--accent);
+  }
+  .vibes { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .vibe-tag {
+    font-size: 11.5px; padding: 3px 9px; border-radius: 999px;
+    background: var(--bg-card); border: 1px solid var(--line); color: var(--muted);
+  }
+  .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+  .gallery img {
+    width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px;
+    background: var(--bg-card); opacity: 0; transition: opacity .3s;
+  }
+  .gallery img.loaded { opacity: 1; }
+
+  .footer {
+    padding: 8px 16px; border-top: 1px solid var(--line);
+    font-size: 11px; color: var(--muted); text-align: center;
+  }
+  .footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+  <aside class="sidebar">
+    <div class="header">
+      <h1><span class="pin">▲</span> Escape Maputo</h1>
+      <div class="sub">High-ground, cool, kid-friendly getaways within a day's drive — South Africa, Eswatini, malaria-free.</div>
+      <div class="origin">📍 Origin: <b>Maputo</b> · drive times measured from city center</div>
+    </div>
+
+    <div class="filters">
+      <div>
+        <div class="filter-label">Tier</div>
+        <div class="filter-row" id="tier-filters">
+          <button class="chip tier-1 active" data-tier="1">Tier 1 · &lt;4h</button>
+          <button class="chip tier-2 active" data-tier="2">Tier 2 · 4–6h</button>
+          <button class="chip tier-3 active" data-tier="3">Tier 3 · 7h+</button>
+          <button class="chip tier-urban active" data-tier="urban">Urban</button>
+        </div>
+      </div>
+      <div>
+        <div class="filter-label">Must-haves</div>
+        <div class="filter-row" id="flag-filters">
+          <button class="chip" data-flag="malaria_free">Malaria-free</button>
+          <button class="chip" data-flag="kid5">Kid-friendly ★★★★★</button>
+          <button class="chip" data-flag="cheap">Affordable</button>
+          <button class="chip" data-flag="highland">High ground</button>
+        </div>
+      </div>
+      <div>
+        <div class="filter-label">Max drive time: <span id="drive-val" class="drive-val">8h</span></div>
+        <div class="drive-row">
+          <input type="range" min="2" max="8" step="0.5" value="8" id="drive-max">
+        </div>
+      </div>
+    </div>
+
+    <div class="list" id="list"></div>
+
+    <div class="footer">
+      <span id="count">0</span> spots · sorted by drive time ·
+      <a href="#" id="reset">reset filters</a>
+    </div>
+  </aside>
+
+  <div class="map">
+    <div id="map"></div>
+  </div>
+</div>
+
+<button class="mobile-toggle" id="mobile-toggle">📋 List</button>
+
+<div class="drawer" id="drawer">
+  <button class="drawer-close" id="drawer-close">✕</button>
+  <div id="drawer-content"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="data.js?v=2"></script>
+<script src="app.js?v=2"></script>
+</body>
+</html>
