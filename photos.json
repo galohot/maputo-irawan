@@ -1,0 +1,610 @@
+{
+  "dullstroom": {
+    "place_id": "ChIJ3_byj84D6h4RmdqtzqXDiGo",
+    "google_maps_uri": "https://maps.google.com/?cid=7676600681757530777&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-25.4167,30.1167",
+    "photos": [
+      {
+        "src": "/photos/dullstroom/0.jpg",
+        "author": "Tebogo Mabena",
+        "author_uri": "https://maps.google.com/maps/contrib/107954702273093461671"
+      },
+      {
+        "src": "/photos/dullstroom/1.jpg",
+        "author": "Tebogo Mabena",
+        "author_uri": "https://maps.google.com/maps/contrib/107954702273093461671"
+      },
+      {
+        "src": "/photos/dullstroom/2.jpg",
+        "author": "Desir\u00e9 Mathey",
+        "author_uri": "https://maps.google.com/maps/contrib/109610453489759045339"
+      },
+      {
+        "src": "/photos/dullstroom/3.jpg",
+        "author": "Tebogo Mabena",
+        "author_uri": "https://maps.google.com/maps/contrib/107954702273093461671"
+      },
+      {
+        "src": "/photos/dullstroom/4.jpg",
+        "author": "Ilouise Viljoen",
+        "author_uri": "https://maps.google.com/maps/contrib/104832348577339824015"
+      },
+      {
+        "src": "/photos/dullstroom/5.jpg",
+        "author": "Desir\u00e9 Mathey",
+        "author_uri": "https://maps.google.com/maps/contrib/109610453489759045339"
+      }
+    ]
+  },
+  "malolotja": {
+    "place_id": "ChIJn0-YDHXo6B4RaNmS3Dntbp0",
+    "google_maps_uri": "https://maps.google.com/?cid=11344265344162388328&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-26.1333,31.1167",
+    "photos": [
+      {
+        "src": "/photos/malolotja/0.jpg",
+        "author": "Spencer Stolworthy",
+        "author_uri": "https://maps.google.com/maps/contrib/117766764525875493895"
+      },
+      {
+        "src": "/photos/malolotja/1.jpg",
+        "author": "Hifive Chiu",
+        "author_uri": "https://maps.google.com/maps/contrib/103715912485803926941"
+      },
+      {
+        "src": "/photos/malolotja/2.jpg",
+        "author": "Liam Chen",
+        "author_uri": "https://maps.google.com/maps/contrib/107835889146040217113"
+      },
+      {
+        "src": "/photos/malolotja/3.jpg",
+        "author": "Hifive Chiu",
+        "author_uri": "https://maps.google.com/maps/contrib/103715912485803926941"
+      },
+      {
+        "src": "/photos/malolotja/4.jpg",
+        "author": "Arian Kulp",
+        "author_uri": "https://maps.google.com/maps/contrib/104266471681083032610"
+      },
+      {
+        "src": "/photos/malolotja/5.jpg",
+        "author": "Alex lin",
+        "author_uri": "https://maps.google.com/maps/contrib/114486537287671969884"
+      }
+    ]
+  },
+  "sabie": {
+    "place_id": "ChIJQ9t11FScwh4R3lu7HYePIag",
+    "google_maps_uri": "https://maps.google.com/?cid=12115122283085519838&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-25.0989,30.7831",
+    "photos": [
+      {
+        "src": "/photos/sabie/0.jpg",
+        "author": "Sabi River Sun Resort",
+        "author_uri": "https://maps.google.com/maps/contrib/108779431241521289644"
+      },
+      {
+        "src": "/photos/sabie/1.jpg",
+        "author": "Sabi River Sun Resort",
+        "author_uri": "https://maps.google.com/maps/contrib/108779431241521289644"
+      },
+      {
+        "src": "/photos/sabie/2.jpg",
+        "author": "Dr. PAK",
+        "author_uri": "https://maps.google.com/maps/contrib/109941722664586505837"
+      },
+      {
+        "src": "/photos/sabie/3.jpg",
+        "author": "The van Loons",
+        "author_uri": "https://maps.google.com/maps/contrib/116069371618044874384"
+      },
+      {
+        "src": "/photos/sabie/4.jpg",
+        "author": "Sabi River Sun Resort",
+        "author_uri": "https://maps.google.com/maps/contrib/108779431241521289644"
+      },
+      {
+        "src": "/photos/sabie/5.jpg",
+        "author": "Sabi River Sun Resort",
+        "author_uri": "https://maps.google.com/maps/contrib/108779431241521289644"
+      }
+    ]
+  },
+  "kaapsehoop": {
+    "place_id": "ChIJr5aohcO26R4RvYlz_ti_SAo",
+    "google_maps_uri": "https://maps.google.com/?cid=741053077405272509&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-25.5867,30.7942",
+    "photos": [
+      {
+        "src": "/photos/kaapsehoop/0.jpg",
+        "author": "Andries du Preez",
+        "author_uri": "https://maps.google.com/maps/contrib/112884421882559294460"
+      },
+      {
+        "src": "/photos/kaapsehoop/1.jpg",
+        "author": "Andries du Preez",
+        "author_uri": "https://maps.google.com/maps/contrib/112884421882559294460"
+      },
+      {
+        "src": "/photos/kaapsehoop/2.jpg",
+        "author": "Maryke Wasserman",
+        "author_uri": "https://maps.google.com/maps/contrib/113699264402107809143"
+      },
+      {
+        "src": "/photos/kaapsehoop/3.jpg",
+        "author": "Andries du Preez",
+        "author_uri": "https://maps.google.com/maps/contrib/112884421882559294460"
+      },
+      {
+        "src": "/photos/kaapsehoop/4.jpg",
+        "author": "Monika Van Zyl",
+        "author_uri": "https://maps.google.com/maps/contrib/117091610267272587667"
+      },
+      {
+        "src": "/photos/kaapsehoop/5.jpg",
+        "author": "Lana Botha",
+        "author_uri": "https://maps.google.com/maps/contrib/109467410279105719465"
+      }
+    ]
+  },
+  "ezulwini": {
+    "place_id": "ChIJ59Yl5Z3M6B4R5sg2ibj5ugo",
+    "google_maps_uri": "https://maps.google.com/?cid=773204857018829030&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-26.4167,31.1833",
+    "photos": [
+      {
+        "src": "/photos/ezulwini/0.jpg",
+        "author": "Royal Swazi Spa",
+        "author_uri": "https://maps.google.com/maps/contrib/113776627843526908819"
+      },
+      {
+        "src": "/photos/ezulwini/1.jpg",
+        "author": "suresh jadhav",
+        "author_uri": "https://maps.google.com/maps/contrib/100735456774420727019"
+      },
+      {
+        "src": "/photos/ezulwini/2.jpg",
+        "author": "Mak Atak1967",
+        "author_uri": "https://maps.google.com/maps/contrib/107521252581344443133"
+      },
+      {
+        "src": "/photos/ezulwini/3.jpg",
+        "author": "Ryan Subbiah",
+        "author_uri": "https://maps.google.com/maps/contrib/109801269600271025974"
+      },
+      {
+        "src": "/photos/ezulwini/4.jpg",
+        "author": "suresh jadhav",
+        "author_uri": "https://maps.google.com/maps/contrib/100735456774420727019"
+      },
+      {
+        "src": "/photos/ezulwini/5.jpg",
+        "author": "C K",
+        "author_uri": "https://maps.google.com/maps/contrib/104012689609762537037"
+      }
+    ]
+  },
+  "mbabane": {
+    "place_id": "ChIJBw8yR-HO6B4Rn93hevKYv3o",
+    "google_maps_uri": "https://maps.google.com/?cid=8844956360390073759&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-26.3167,31.1333",
+    "photos": [
+      {
+        "src": "/photos/mbabane/0.jpg",
+        "author": "Muhammad Habibur Sarder",
+        "author_uri": "https://maps.google.com/maps/contrib/107823580793397204324"
+      },
+      {
+        "src": "/photos/mbabane/1.jpg",
+        "author": "Kenn Abuya",
+        "author_uri": "https://maps.google.com/maps/contrib/106427470930460190616"
+      },
+      {
+        "src": "/photos/mbabane/2.jpg",
+        "author": "Diva 2110",
+        "author_uri": "https://maps.google.com/maps/contrib/100401547336437379116"
+      },
+      {
+        "src": "/photos/mbabane/3.jpg",
+        "author": "Rolf Appel - Worldphoto",
+        "author_uri": "https://maps.google.com/maps/contrib/117924672212456781135"
+      },
+      {
+        "src": "/photos/mbabane/4.jpg",
+        "author": "Bilal Sardari",
+        "author_uri": "https://maps.google.com/maps/contrib/102136956969179869334"
+      },
+      {
+        "src": "/photos/mbabane/5.jpg",
+        "author": "Jan V",
+        "author_uri": "https://maps.google.com/maps/contrib/114606333189677571509"
+      }
+    ]
+  },
+  "piggs-peak": {
+    "place_id": "ChIJ4VnyysTs6B4RYileHAeDwFU",
+    "google_maps_uri": "https://maps.google.com/?cid=6179082755316263266&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-25.9667,31.25",
+    "photos": [
+      {
+        "src": "/photos/piggs-peak/0.jpg",
+        "author": "Sandile Mavuso",
+        "author_uri": "https://maps.google.com/maps/contrib/115956872434061604440"
+      },
+      {
+        "src": "/photos/piggs-peak/1.jpg",
+        "author": "johan_advrider_za",
+        "author_uri": "https://maps.google.com/maps/contrib/115468497782717454510"
+      },
+      {
+        "src": "/photos/piggs-peak/2.jpg",
+        "author": "Steve McGrath",
+        "author_uri": "https://maps.google.com/maps/contrib/106142132196076351471"
+      },
+      {
+        "src": "/photos/piggs-peak/3.jpg",
+        "author": "Douglas Masilela",
+        "author_uri": "https://maps.google.com/maps/contrib/114842324240028884571"
+      },
+      {
+        "src": "/photos/piggs-peak/4.jpg",
+        "author": "Sandile Mavuso",
+        "author_uri": "https://maps.google.com/maps/contrib/115956872434061604440"
+      },
+      {
+        "src": "/photos/piggs-peak/5.jpg",
+        "author": "Douglas Masilela",
+        "author_uri": "https://maps.google.com/maps/contrib/114842324240028884571"
+      }
+    ]
+  },
+  "graskop": {
+    "place_id": "ChIJASBFMQRjwh4RYHuH8Yz8g4w",
+    "google_maps_uri": "https://maps.google.com/?cid=10125214069536815968&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-24.9333,30.8333",
+    "photos": [
+      {
+        "src": "/photos/graskop/0.jpg",
+        "author": "Graskop Gorge Lift Co.",
+        "author_uri": "https://maps.google.com/maps/contrib/105881788044741548614"
+      },
+      {
+        "src": "/photos/graskop/1.jpg",
+        "author": "segran moodley",
+        "author_uri": "https://maps.google.com/maps/contrib/115488815168666497803"
+      },
+      {
+        "src": "/photos/graskop/2.jpg",
+        "author": "Ruan Janse van Rensburg",
+        "author_uri": "https://maps.google.com/maps/contrib/103063671373616236352"
+      },
+      {
+        "src": "/photos/graskop/3.jpg",
+        "author": "Susan Fourie",
+        "author_uri": "https://maps.google.com/maps/contrib/100070352028486589281"
+      },
+      {
+        "src": "/photos/graskop/4.jpg",
+        "author": "Morgan Mostert",
+        "author_uri": "https://maps.google.com/maps/contrib/111222172876494330635"
+      },
+      {
+        "src": "/photos/graskop/5.jpg",
+        "author": "Lynn Johnson",
+        "author_uri": "https://maps.google.com/maps/contrib/112887269088425438101"
+      }
+    ]
+  },
+  "lydenburg": {
+    "place_id": "ChIJEQb4OIN2wh4RZ9lRYnmBews",
+    "google_maps_uri": "https://maps.google.com/?cid=827397314893175143&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-25.0958,30.4514",
+    "photos": [
+      {
+        "src": "/photos/lydenburg/0.jpg",
+        "author": "\u05e2\u05e8\u05df \u05d0\u05dc\u05d8\u05e9\u05d5\u05dc\u05e8",
+        "author_uri": "https://maps.google.com/maps/contrib/115825364905485952976"
+      },
+      {
+        "src": "/photos/lydenburg/1.jpg",
+        "author": "Fernando Kivedo",
+        "author_uri": "https://maps.google.com/maps/contrib/108240702887921599348"
+      },
+      {
+        "src": "/photos/lydenburg/2.jpg",
+        "author": "Morne Harding",
+        "author_uri": "https://maps.google.com/maps/contrib/116993648705334780316"
+      },
+      {
+        "src": "/photos/lydenburg/3.jpg",
+        "author": "PRINCE",
+        "author_uri": "https://maps.google.com/maps/contrib/100048163786420380254"
+      },
+      {
+        "src": "/photos/lydenburg/4.jpg",
+        "author": "Susan-Katryn JVR 'S",
+        "author_uri": "https://maps.google.com/maps/contrib/109399389787456740234"
+      },
+      {
+        "src": "/photos/lydenburg/5.jpg",
+        "author": "Discovermoto",
+        "author_uri": "https://maps.google.com/maps/contrib/116461250947862873985"
+      }
+    ]
+  },
+  "pilgrims-rest": {
+    "place_id": "ChIJpw5Yj2Fmwh4Ry3kiyOFcPZo",
+    "google_maps_uri": "https://maps.google.com/?cid=11114141580215351755&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-24.8917,30.7517",
+    "photos": [
+      {
+        "src": "/photos/pilgrims-rest/0.jpg",
+        "author": "Jeffrey K.",
+        "author_uri": "https://maps.google.com/maps/contrib/106075114562305187591"
+      },
+      {
+        "src": "/photos/pilgrims-rest/1.jpg",
+        "author": "Christo Boshoff",
+        "author_uri": "https://maps.google.com/maps/contrib/102544658689559367365"
+      },
+      {
+        "src": "/photos/pilgrims-rest/2.jpg",
+        "author": "Kaihl Meades",
+        "author_uri": "https://maps.google.com/maps/contrib/101195711916345607341"
+      },
+      {
+        "src": "/photos/pilgrims-rest/3.jpg",
+        "author": "Ren\u00e9 von Tiger",
+        "author_uri": "https://maps.google.com/maps/contrib/117973202917802208621"
+      },
+      {
+        "src": "/photos/pilgrims-rest/4.jpg",
+        "author": "Corne Engelbrecht",
+        "author_uri": "https://maps.google.com/maps/contrib/101500359725887174040"
+      },
+      {
+        "src": "/photos/pilgrims-rest/5.jpg",
+        "author": "Jeffrey K.",
+        "author_uri": "https://maps.google.com/maps/contrib/106075114562305187591"
+      }
+    ]
+  },
+  "wakkerstroom": {
+    "place_id": "ChIJJVoUkjfV7R4RRykyFR2frGc",
+    "google_maps_uri": "https://maps.google.com/?cid=7470520829159287111&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-27.3528,30.1453",
+    "photos": [
+      {
+        "src": "/photos/wakkerstroom/0.jpg",
+        "author": "Warren Richards",
+        "author_uri": "https://maps.google.com/maps/contrib/106930625181044163798"
+      },
+      {
+        "src": "/photos/wakkerstroom/1.jpg",
+        "author": "Ivonne Coetzee",
+        "author_uri": "https://maps.google.com/maps/contrib/106459209663174221122"
+      },
+      {
+        "src": "/photos/wakkerstroom/2.jpg",
+        "author": "Warren Richards",
+        "author_uri": "https://maps.google.com/maps/contrib/106930625181044163798"
+      },
+      {
+        "src": "/photos/wakkerstroom/3.jpg",
+        "author": "Dirk Taljard",
+        "author_uri": "https://maps.google.com/maps/contrib/108603428035390098363"
+      },
+      {
+        "src": "/photos/wakkerstroom/4.jpg",
+        "author": "Trudy Willemse",
+        "author_uri": "https://maps.google.com/maps/contrib/111805580671557197064"
+      },
+      {
+        "src": "/photos/wakkerstroom/5.jpg",
+        "author": "Trudy Willemse",
+        "author_uri": "https://maps.google.com/maps/contrib/111805580671557197064"
+      }
+    ]
+  },
+  "magoebaskloof": {
+    "place_id": "ChIJLVXxtvWyxh4R1yeWKV1KviM",
+    "google_maps_uri": "https://maps.google.com/?cid=2575577800892622807&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-23.85,29.95",
+    "photos": [
+      {
+        "src": "/photos/magoebaskloof/0.jpg",
+        "author": "Mark Mulder",
+        "author_uri": "https://maps.google.com/maps/contrib/100400001765269583410"
+      },
+      {
+        "src": "/photos/magoebaskloof/1.jpg",
+        "author": "Mark Mulder",
+        "author_uri": "https://maps.google.com/maps/contrib/100400001765269583410"
+      },
+      {
+        "src": "/photos/magoebaskloof/2.jpg",
+        "author": "Mark Mulder",
+        "author_uri": "https://maps.google.com/maps/contrib/100400001765269583410"
+      },
+      {
+        "src": "/photos/magoebaskloof/3.jpg",
+        "author": "Mark Mulder",
+        "author_uri": "https://maps.google.com/maps/contrib/100400001765269583410"
+      },
+      {
+        "src": "/photos/magoebaskloof/4.jpg",
+        "author": "Don van Rooyen",
+        "author_uri": "https://maps.google.com/maps/contrib/108366220046518123089"
+      },
+      {
+        "src": "/photos/magoebaskloof/5.jpg",
+        "author": "Janine de Kock",
+        "author_uri": "https://maps.google.com/maps/contrib/112656608941417549460"
+      }
+    ]
+  },
+  "clarens": {
+    "place_id": "ChIJ24f7A2NZjR4RdyyeH7Sf0qE",
+    "google_maps_uri": "https://maps.google.com/?cid=11660557981189024887&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-28.5167,28.4167",
+    "photos": [
+      {
+        "src": "/photos/clarens/0.jpg",
+        "author": "Mauro Assump\u00e7\u00e3o",
+        "author_uri": "https://maps.google.com/maps/contrib/105851425078779895279"
+      },
+      {
+        "src": "/photos/clarens/1.jpg",
+        "author": "Monika Van Zyl",
+        "author_uri": "https://maps.google.com/maps/contrib/117091610267272587667"
+      },
+      {
+        "src": "/photos/clarens/2.jpg",
+        "author": "Monika Van Zyl",
+        "author_uri": "https://maps.google.com/maps/contrib/117091610267272587667"
+      },
+      {
+        "src": "/photos/clarens/3.jpg",
+        "author": "Betsie Burger",
+        "author_uri": "https://maps.google.com/maps/contrib/111877015175541540937"
+      },
+      {
+        "src": "/photos/clarens/4.jpg",
+        "author": "Monika Van Zyl",
+        "author_uri": "https://maps.google.com/maps/contrib/117091610267272587667"
+      },
+      {
+        "src": "/photos/clarens/5.jpg",
+        "author": "Betsie Burger",
+        "author_uri": "https://maps.google.com/maps/contrib/111877015175541540937"
+      }
+    ]
+  },
+  "pretoria": {
+    "place_id": "ChIJRykokhTZvx4R8ABLY7vPqQ4",
+    "google_maps_uri": "https://maps.google.com/?cid=1056603991326785776&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-25.7479,28.2293",
+    "photos": [
+      {
+        "src": "/photos/pretoria/0.jpg",
+        "author": "Phillip Chauke",
+        "author_uri": "https://maps.google.com/maps/contrib/106413095325614985842"
+      },
+      {
+        "src": "/photos/pretoria/1.jpg",
+        "author": "Mashaole Nkgapele",
+        "author_uri": "https://maps.google.com/maps/contrib/113548874652121422358"
+      },
+      {
+        "src": "/photos/pretoria/2.jpg",
+        "author": "Phillip Chauke",
+        "author_uri": "https://maps.google.com/maps/contrib/106413095325614985842"
+      },
+      {
+        "src": "/photos/pretoria/3.jpg",
+        "author": "Gift Badze",
+        "author_uri": "https://maps.google.com/maps/contrib/109720930144489813613"
+      },
+      {
+        "src": "/photos/pretoria/4.jpg",
+        "author": "Phillip Chauke",
+        "author_uri": "https://maps.google.com/maps/contrib/106413095325614985842"
+      },
+      {
+        "src": "/photos/pretoria/5.jpg",
+        "author": "Phillip Chauke",
+        "author_uri": "https://maps.google.com/maps/contrib/106413095325614985842"
+      }
+    ]
+  },
+  "joburg-sandton": {
+    "place_id": "ChIJFwX0y5hzlR4RTLcevyG9-A0",
+    "google_maps_uri": "https://maps.google.com/?cid=1006762469355337548&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-26.1075,28.0567",
+    "photos": [
+      {
+        "src": "/photos/joburg-sandton/0.jpg",
+        "author": "Bongani Baloyi",
+        "author_uri": "https://maps.google.com/maps/contrib/117464075576895315459"
+      },
+      {
+        "src": "/photos/joburg-sandton/1.jpg",
+        "author": "Makasa Junior",
+        "author_uri": "https://maps.google.com/maps/contrib/107776692411170068294"
+      },
+      {
+        "src": "/photos/joburg-sandton/2.jpg",
+        "author": "Trend news Channel",
+        "author_uri": "https://maps.google.com/maps/contrib/116552922745002775574"
+      },
+      {
+        "src": "/photos/joburg-sandton/3.jpg",
+        "author": "Bongani Baloyi",
+        "author_uri": "https://maps.google.com/maps/contrib/117464075576895315459"
+      },
+      {
+        "src": "/photos/joburg-sandton/4.jpg",
+        "author": "Jan V",
+        "author_uri": "https://maps.google.com/maps/contrib/114606333189677571509"
+      },
+      {
+        "src": "/photos/joburg-sandton/5.jpg",
+        "author": "Peter Schoeman",
+        "author_uri": "https://maps.google.com/maps/contrib/115156849171798006675"
+      }
+    ]
+  },
+  "pilanesberg": {
+    "place_id": "ChIJPzJoaFwrvB4RMXXkD5luVaI",
+    "google_maps_uri": "https://maps.google.com/?cid=11697377210840413489&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "street_view": true,
+    "street_view_uri": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=-25.25,27.05",
+    "photos": [
+      {
+        "src": "/photos/pilanesberg/0.jpg",
+        "author": "Marie Nitschke",
+        "author_uri": "https://maps.google.com/maps/contrib/107937971155218490275"
+      },
+      {
+        "src": "/photos/pilanesberg/1.jpg",
+        "author": "Ravin Singh",
+        "author_uri": "https://maps.google.com/maps/contrib/116051955791977361752"
+      },
+      {
+        "src": "/photos/pilanesberg/2.jpg",
+        "author": "Michael Fusco",
+        "author_uri": "https://maps.google.com/maps/contrib/113546212364823464003"
+      },
+      {
+        "src": "/photos/pilanesberg/3.jpg",
+        "author": "Luis Afonso",
+        "author_uri": "https://maps.google.com/maps/contrib/115832970177111248994"
+      },
+      {
+        "src": "/photos/pilanesberg/4.jpg",
+        "author": "Garth Blair",
+        "author_uri": "https://maps.google.com/maps/contrib/108230179908928613434"
+      },
+      {
+        "src": "/photos/pilanesberg/5.jpg",
+        "author": "Marilyn Coleman-Miles",
+        "author_uri": "https://maps.google.com/maps/contrib/101386814123210699737"
+      }
+    ]
+  }
+}

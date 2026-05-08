@@ -349,7 +349,7 @@ window.MAPUTO_DEST = {
     },
     {
       id: "joburg-sandton",
-      name: "Johannesburg — Sandton / Melrose Arch",
+      name: "Johannesburg · Sandton & Melrose Arch",
       country: "South Africa",
       region: "Gauteng",
       lat: -26.1075, lon: 28.0567,

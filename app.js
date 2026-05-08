@@ -1,146 +1,101 @@
-// Escape Maputo — interactive map app
+// Escape Maputo — editorial magazine app
 (function () {
   'use strict';
 
   const DATA = window.MAPUTO_DEST;
   const ORIGIN = DATA.origin;
   const DESTS = DATA.destinations;
+  let PHOTOS = {};
 
-  // ---------- Wikipedia photo cache ----------
-  const PHOTO_CACHE = {};
-  const PHOTO_PROMISES = {};
+  // -------- Boot --------
+  fetch('photos.json?v=4')
+    .then((r) => r.json())
+    .then((p) => {
+      PHOTOS = p;
+      renderHero();
+      renderStories();
+      buildMap();
+    })
+    .catch(() => {
+      renderStories();
+      buildMap();
+    });
 
-  async function loadWikiPhoto(slug) {
-    if (PHOTO_CACHE[slug] !== undefined) return PHOTO_CACHE[slug];
-    if (PHOTO_PROMISES[slug]) return PHOTO_PROMISES[slug];
-    PHOTO_PROMISES[slug] = (async () => {
-      try {
-        const r = await fetch(
-          `https://en.wikipedia.org/api/rest_v1/page/summary/${slug}?redirect=true`,
-          { headers: { Accept: 'application/json' } }
-        );
-        if (!r.ok) throw 0;
-        const j = await r.json();
-        const result = {
-          thumb: j.thumbnail?.source || null,
-          original: j.originalimage?.source || j.thumbnail?.source || null,
-          extract: j.extract || null,
-          url: j.content_urls?.desktop?.page || null,
-        };
-        PHOTO_CACHE[slug] = result;
-        return result;
-      } catch {
-        PHOTO_CACHE[slug] = { thumb: null, original: null, extract: null, url: null };
-        return PHOTO_CACHE[slug];
-      }
-    })();
-    return PHOTO_PROMISES[slug];
+  // -------- Hero (rotating featured photo) --------
+  const HERO_PICKS = ['kaapsehoop', 'malolotja', 'graskop', 'clarens', 'pilgrims-rest', 'mbabane'];
+  function renderHero() {
+    const el = document.getElementById('hero-photo');
+    const credit = document.getElementById('hero-credit');
+    const choose = () => {
+      const id = HERO_PICKS[Math.floor(Math.random() * HERO_PICKS.length)];
+      const photos = PHOTOS[id]?.photos;
+      if (!photos || !photos.length) return null;
+      const dest = DESTS.find((d) => d.id === id);
+      const ph = photos[Math.floor(Math.random() * photos.length)];
+      return { dest, ph };
+    };
+    const pick = choose();
+    if (!pick) return;
+    const { dest, ph } = pick;
+    const img = new Image();
+    img.onload = () => {
+      el.style.backgroundImage = `url(${ph.src})`;
+      requestAnimationFrame(() => el.classList.add('visible'));
+      credit.innerHTML = `${dest.name} · photograph by <a href="${ph.author_uri}" target="_blank" rel="noopener">${ph.author || 'Anonymous'}</a>`;
+    };
+    img.src = ph.src;
   }
 
-  // ---------- Map ----------
-  const map = L.map('map', {
-    center: [-26.5, 30.5],
-    zoom: 6,
-    zoomControl: true,
-    minZoom: 5,
-    maxZoom: 13,
-  });
+  // -------- Tier helpers --------
+  function tierKey(d) { return d.tier === 'urban' ? 'tu' : 't' + d.tier; }
+  function escapeName(name) {
+    // Split on common separators, render delimiters in italic brass for editorial feel
+    return name
+      .replace(/ & /g, '<span class="hand-amp"> &amp; </span>')
+      .replace(/ — /g, '<span class="hand-sep"> — </span>')
+      .replace(/ \/ /g, '<span class="hand-sep"> / </span>');
+  }
+  function tierLabel(d) {
+    return d.tier === 'urban' ? 'Urban escape' :
+           d.tier === 1 ? 'Tier I · under 4h' :
+           d.tier === 2 ? 'Tier II · 4 to 6h' :
+                          'Tier III · 7h or more';
+  }
+  function pad(n) { return String(n).padStart(2, '0'); }
 
-  L.tileLayer(
-    'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}{r}.png',
-    {
-      attribution:
-        '&copy; <a href="https://openstreetmap.org">OSM</a> · &copy; <a href="https://carto.com/">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 19,
-    }
-  ).addTo(map);
-
-  // Origin marker
-  const originIcon = L.divIcon({
-    className: '',
-    html: '<div class="pin-marker origin">⌂</div>',
-    iconSize: [36, 36],
-    iconAnchor: [18, 18],
-  });
-  L.marker([ORIGIN.lat, ORIGIN.lon], { icon: originIcon, zIndexOffset: 1000 })
-    .addTo(map)
-    .bindPopup(
-      `<b>Maputo</b><br><span style="color:#8896b8">Starting point</span>`
-    );
-
-  // Destination markers
-  const markers = {};
-  DESTS.forEach((d) => {
-    const tierKey =
-      d.tier === 'urban' ? 'tu' : d.tier === 1 ? 't1' : d.tier === 2 ? 't2' : 't3';
-    const icon = L.divIcon({
-      className: '',
-      html: `<div class="pin-marker ${tierKey}">${d.altitude_m >= 1500 ? '▲' : '●'}</div>`,
-      iconSize: [28, 28],
-      iconAnchor: [14, 14],
-    });
-    const m = L.marker([d.lat, d.lon], { icon }).addTo(map);
-    m.on('click', () => openDrawer(d.id));
-    m.bindTooltip(
-      `<b>${d.name}</b><br>${d.drive_h}h · ${d.altitude_m}m`,
-      { direction: 'top', offset: [0, -10] }
-    );
-    markers[d.id] = m;
-  });
-
-  // ---------- Filters & list ----------
+  // -------- Filter state --------
   const state = {
     tiers: new Set(['1', '2', '3', 'urban']),
     flags: new Set(),
     driveMax: 8,
   };
 
-  const tierEls = document.querySelectorAll('#tier-filters .chip');
-  tierEls.forEach((el) => {
+  document.querySelectorAll('#tier-filters .chip').forEach((el) => {
     el.addEventListener('click', () => {
       const t = el.dataset.tier;
-      if (state.tiers.has(t)) state.tiers.delete(t);
-      else state.tiers.add(t);
+      state.tiers.has(t) ? state.tiers.delete(t) : state.tiers.add(t);
       el.classList.toggle('active');
-      render();
+      renderStories();
     });
   });
-
-  const flagEls = document.querySelectorAll('#flag-filters .chip');
-  flagEls.forEach((el) => {
+  document.querySelectorAll('#flag-filters .chip').forEach((el) => {
     el.addEventListener('click', () => {
       const f = el.dataset.flag;
-      if (state.flags.has(f)) state.flags.delete(f);
-      else state.flags.add(f);
+      state.flags.has(f) ? state.flags.delete(f) : state.flags.add(f);
       el.classList.toggle('active');
-      render();
+      renderStories();
     });
   });
-
   const driveSlider = document.getElementById('drive-max');
   const driveVal = document.getElementById('drive-val');
   driveSlider.addEventListener('input', () => {
     state.driveMax = parseFloat(driveSlider.value);
     driveVal.textContent = state.driveMax + 'h';
-    render();
-  });
-
-  document.getElementById('reset').addEventListener('click', (e) => {
-    e.preventDefault();
-    state.tiers = new Set(['1', '2', '3', 'urban']);
-    state.flags = new Set();
-    state.driveMax = 8;
-    driveSlider.value = 8;
-    driveVal.textContent = '8h';
-    tierEls.forEach((el) => el.classList.add('active'));
-    flagEls.forEach((el) => el.classList.remove('active'));
-    render();
+    renderStories();
   });
 
   function passes(d) {
-    const tierKey = String(d.tier);
-    if (!state.tiers.has(tierKey)) return false;
+    if (!state.tiers.has(String(d.tier))) return false;
     if (d.drive_h > state.driveMax) return false;
     if (state.flags.has('malaria_free') && !d.malaria_free) return false;
     if (state.flags.has('kid5') && d.kid_score < 5) return false;
@@ -149,207 +104,319 @@
     return true;
   }
 
-  function tierKey(d) {
-    return d.tier === 'urban' ? 'tu' : 't' + d.tier;
-  }
-
-  function render() {
+  // -------- Stories --------
+  function renderStories() {
     const visible = DESTS.filter(passes).sort((a, b) => a.drive_h - b.drive_h);
-
-    // Markers
-    DESTS.forEach((d) => {
-      const m = markers[d.id];
-      if (passes(d)) {
-        if (!map.hasLayer(m)) m.addTo(map);
-      } else {
-        if (map.hasLayer(m)) map.removeLayer(m);
-      }
-    });
-
-    // List
-    const list = document.getElementById('list');
     document.getElementById('count').textContent = visible.length;
+    const root = document.getElementById('stories');
     if (visible.length === 0) {
-      list.innerHTML = '<div class="empty">No spots match — loosen the filters.</div>';
+      root.innerHTML = `<div class="empty"><h3>Nothing matches.</h3><p>Loosen the filters above.</p></div>`;
+      syncMarkers([]);
       return;
     }
-    list.innerHTML = '';
-    visible.forEach((d) => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.dataset.id = d.id;
-      card.innerHTML = `
-        <div class="thumb">
-          <div class="placeholder">${d.altitude_m >= 1500 ? '▲' : '◆'}</div>
-        </div>
-        <div class="body">
-          <div class="title-row">
-            <span class="tier-dot ${tierKey(d)}"></span>
-            <h3>${d.name}</h3>
-          </div>
-          <div class="meta">
-            <span>🚗 ${d.drive_h}h</span>
-            <span>⛰ ${d.altitude_m}m</span>
-            <span>${'⭐'.repeat(d.kid_score)}</span>
-            ${d.malaria_free ? '<span style="color:#56d3b3">🛡 malaria-free</span>' : ''}
-          </div>
-        </div>
-      `;
-      card.addEventListener('click', () => {
-        document.querySelectorAll('.card.active').forEach((c) => c.classList.remove('active'));
-        card.classList.add('active');
-        focusOn(d);
-      });
-      list.appendChild(card);
-
-      // lazy load thumb
-      loadWikiPhoto(d.wiki).then((p) => {
-        if (p.thumb) {
-          const img = document.createElement('img');
-          img.src = p.thumb;
-          img.alt = d.name;
-          img.loading = 'lazy';
-          const thumb = card.querySelector('.thumb');
-          img.onload = () => {
-            img.classList.add('loaded');
-            const ph = thumb.querySelector('.placeholder');
-            if (ph) ph.remove();
-          };
-          thumb.insertBefore(img, thumb.firstChild);
-        }
-      });
+    root.innerHTML = '';
+    visible.forEach((d, i) => {
+      const photoSet = (PHOTOS[d.id] && PHOTOS[d.id].photos) || [];
+      const meta = PHOTOS[d.id] || {};
+      root.appendChild(buildStory(d, i + 1, photoSet, meta));
     });
+    syncMarkers(visible);
+    setTimeout(armReveal, 50);
   }
 
-  function focusOn(d) {
-    map.flyTo([d.lat, d.lon], 9, { duration: 0.6 });
-    openDrawer(d.id);
-  }
+  function buildStory(d, num, photos, meta) {
+    const el = document.createElement('article');
+    el.className = 'story anim';
+    el.id = 'story-' + d.id;
+    el.dataset.id = d.id;
 
-  // ---------- Drawer ----------
-  const drawer = document.getElementById('drawer');
-  const drawerContent = document.getElementById('drawer-content');
-  document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+    const lead = photos[0];
+    const strip = photos.slice(1, 6);
 
-  function closeDrawer() {
-    drawer.classList.remove('open');
-  }
-
-  async function openDrawer(id) {
-    const d = DESTS.find((x) => x.id === id);
-    if (!d) return;
-    drawerContent.innerHTML = `
-      <div class="hero-fallback">Loading photo…</div>
-      <div class="drawer-body">
-        <h2>${d.name}</h2>
-        <div class="loc">
-          <span><span class="tier-dot ${tierKey(d)}"></span> ${
-      d.tier === 'urban' ? 'Urban escape' : 'Tier ' + d.tier
-    }</span>
-          <span>📍 ${d.region}, ${d.country}</span>
+    const photoCluster = photos.length
+      ? `
+      <figure class="photo-cluster">
+        <div class="lead" data-idx="0">
+          <img src="${lead.src}" alt="${d.name}" loading="lazy">
+          <div class="credit-overlay">Photograph · <a href="${lead.author_uri}" target="_blank" rel="noopener">${lead.author || 'anonymous'}</a> · Google Maps contributor</div>
         </div>
-        <div class="stat-grid">
-          <div class="stat"><div class="k">Drive from Maputo</div><div class="v">${d.drive_h} hours</div></div>
-          <div class="stat"><div class="k">Altitude</div><div class="v">${d.altitude_m} m</div></div>
-          <div class="stat"><div class="k">Kid-friendly</div><div class="v">${'⭐'.repeat(d.kid_score)}</div></div>
-          <div class="stat"><div class="k">Cost</div><div class="v">${'$'.repeat(d.cost_tier)}</div></div>
-          <div class="stat"><div class="k">Malaria</div><div class="v">${d.malaria_free ? '✅ free' : '⚠️ zone'}</div></div>
-          <div class="stat"><div class="k">Best season</div><div class="v">${d.season_peak}</div></div>
-        </div>
-        <div class="blurb">${d.blurb}</div>
+        ${strip.length ? `<div class="strip">
+          ${strip.map((p, j) => `
+            <div class="ph" data-idx="${j + 1}">
+              <img src="${p.src}" alt="${d.name}" loading="lazy">
+            </div>`).join('')}
+        </div>` : ''}
+      </figure>
+      `
+      : '';
 
-        <div class="section-title">Why it works for the family</div>
+    const stats = `
+      <div class="stats">
+        <div class="stat"><div class="stat-k">Drive</div><div class="stat-v">${d.drive_h}<small>h</small></div></div>
+        <div class="stat"><div class="stat-k">Altitude</div><div class="stat-v">${d.altitude_m.toLocaleString()}<small>m</small></div></div>
+        <div class="stat"><div class="stat-k">For kids</div><div class="stat-v">${d.kid_score}<small>/5</small></div></div>
+        <div class="stat"><div class="stat-k">Cost</div><div class="stat-v">${'$'.repeat(d.cost_tier)}</div></div>
+        <div class="stat"><div class="stat-k">Best season</div><div class="stat-v" style="font-size:14px;line-height:1.3">${d.season_peak}</div></div>
+      </div>
+    `;
+
+    const notes = `
+      <div class="notes-block">
+        <div class="notes-label">Why it works for the family</div>
         <ul class="notes">
           ${d.family_notes.map((n) => `<li>${n}</li>`).join('')}
         </ul>
-
-        <div class="section-title">Vibe</div>
-        <div class="vibes">${d.vibe.map((v) => `<span class="vibe-tag">${v}</span>`).join('')}</div>
-
-        <div class="section-title">Photos</div>
-        <div class="gallery" id="gallery-${d.id}">
-          <div style="grid-column:1/-1;color:var(--muted);font-size:12px">Loading…</div>
-        </div>
-
-        <div class="section-title">More</div>
-        <div style="font-size:13px;line-height:1.6">
-          <a id="wiki-link-${d.id}" target="_blank" rel="noopener">Wikipedia ↗</a> ·
-          <a href="https://www.google.com/maps/dir/Maputo/${d.lat},${d.lon}" target="_blank" rel="noopener">Driving directions ↗</a> ·
-          <a href="https://www.google.com/search?q=${encodeURIComponent(d.name + ' family hotel')}" target="_blank" rel="noopener">Search hotels ↗</a>
-        </div>
       </div>
     `;
-    drawer.classList.add('open');
 
-    // Load hero + gallery
-    const wp = await loadWikiPhoto(d.wiki);
-    const heroEl = drawerContent.querySelector('.hero-fallback');
-    if (wp.original) {
-      const img = document.createElement('img');
-      img.className = 'hero';
-      img.src = wp.original;
-      img.alt = d.name;
-      heroEl.replaceWith(img);
-    } else {
-      heroEl.textContent = d.name;
-    }
-    const wikiLink = document.getElementById(`wiki-link-${d.id}`);
-    if (wikiLink && wp.url) wikiLink.href = wp.url;
+    const vibes = `
+      <div class="vibes-row">
+        ${d.vibe.map((v) => `<span class="vibe-tag">${v}</span>`).join('')}
+      </div>
+    `;
 
-    // Gallery: query Wikimedia Commons for images by category/search
-    const gallery = document.getElementById(`gallery-${d.id}`);
-    gallery.innerHTML = '';
-    const galleryImages = await fetchCommonsImages(d.name, 4);
-    if (galleryImages.length === 0) {
-      gallery.innerHTML = `<div style="grid-column:1/-1;color:var(--muted);font-size:12px">No additional photos found.</div>`;
-    } else {
-      galleryImages.forEach((url) => {
-        const img = document.createElement('img');
-        img.src = url;
-        img.alt = d.name;
-        img.loading = 'lazy';
-        img.onload = () => img.classList.add('loaded');
-        gallery.appendChild(img);
+    const mapsUri = meta.google_maps_uri || `https://www.google.com/maps?q=${d.lat},${d.lon}`;
+    const svUri = meta.street_view_uri;
+    const wikiUri = `https://en.wikipedia.org/wiki/${d.wiki}`;
+    const dirUri = `https://www.google.com/maps/dir/Maputo/${d.lat},${d.lon}`;
+
+    const arrow = `<svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg>`;
+
+    const actions = `
+      <div class="actions">
+        <a class="action" href="${mapsUri}" target="_blank" rel="noopener">Open in Google Maps ${arrow}</a>
+        ${svUri ? `<a class="action" href="${svUri}" target="_blank" rel="noopener">Street View ${arrow}</a>` : ''}
+        <a class="action" href="${dirUri}" target="_blank" rel="noopener">Directions from Maputo ${arrow}</a>
+        <a class="action" href="${wikiUri}" target="_blank" rel="noopener">Wikipedia ${arrow}</a>
+      </div>
+    `;
+
+    el.innerHTML = `
+      <header class="story-head">
+        <div class="story-num">${pad(num)}</div>
+        <div>
+          <div class="story-meta">
+            <span class="tier-pill ${tierKey(d)}">${tierLabel(d)}</span>
+            ${d.malaria_free ? 'Malaria-free' : ''}
+          </div>
+          <h2>${escapeName(d.name)}</h2>
+          <div class="story-loc">${d.region}, ${d.country}</div>
+        </div>
+      </header>
+      ${photoCluster}
+      ${stats}
+      <p class="blurb">${d.blurb}</p>
+      ${notes}
+      ${vibes}
+      ${actions}
+    `;
+
+    // Photo click → lightbox
+    if (photos.length) {
+      el.querySelectorAll('.photo-cluster .ph').forEach((node) => {
+        node.addEventListener('click', () => {
+          const idx = parseInt(node.dataset.idx, 10);
+          openLightbox(photos, idx);
+        });
       });
     }
+
+    return el;
   }
 
-  async function fetchCommonsImages(query, limit) {
-    try {
-      const r = await fetch(
-        `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(
-          query
-        )}&gsrnamespace=6&gsrlimit=${limit}&prop=imageinfo&iiprop=url&iiurlwidth=400&format=json&origin=*`
-      );
-      if (!r.ok) return [];
-      const j = await r.json();
-      const pages = j.query?.pages || {};
-      return Object.values(pages)
-        .map((p) => p.imageinfo?.[0]?.thumburl)
-        .filter(Boolean)
-        .slice(0, limit);
-    } catch {
-      return [];
+  // -------- Lightbox --------
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightbox-img');
+  const lbCredit = document.getElementById('lightbox-credit');
+  let lbState = { photos: [], idx: 0 };
+  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+  lb.addEventListener('click', (e) => {
+    if (e.target === lb) closeLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') stepLightbox(1);
+    if (e.key === 'ArrowLeft') stepLightbox(-1);
+  });
+
+  function openLightbox(photos, idx) {
+    lbState = { photos, idx };
+    showLb();
+    lb.classList.add('open');
+  }
+  function stepLightbox(d) {
+    lbState.idx = (lbState.idx + d + lbState.photos.length) % lbState.photos.length;
+    showLb();
+  }
+  function showLb() {
+    const p = lbState.photos[lbState.idx];
+    lbImg.src = p.src;
+    lbCredit.innerHTML = `${lbState.idx + 1} of ${lbState.photos.length} · photograph by <a href="${p.author_uri}" target="_blank" rel="noopener">${p.author || 'anonymous'}</a> on google maps`;
+  }
+  function closeLightbox() { lb.classList.remove('open'); }
+
+  // -------- Map --------
+  let map, mobileMap;
+  const mainMarkers = {};
+  const mobileMarkers = {};
+
+  function buildMap() {
+    map = L.map('map', { center: [-26.5, 30.5], zoom: 6, zoomControl: true, minZoom: 5, maxZoom: 13 });
+    addTiles(map);
+    addOriginMarker(map);
+    DESTS.forEach((d) => {
+      const m = makeMarker(d, map, () => scrollToStory(d.id));
+      mainMarkers[d.id] = m;
+    });
+
+    // Mobile map (lazy-init on first open)
+    document.getElementById('map-fab').addEventListener('click', openMobileMap);
+    document.getElementById('mobile-map-close').addEventListener('click', () => {
+      document.getElementById('mobile-map').classList.remove('open');
+    });
+
+    fitBounds(map);
+  }
+
+  function openMobileMap() {
+    document.getElementById('mobile-map').classList.add('open');
+    if (!mobileMap) {
+      mobileMap = L.map('mobile-map-canvas', { center: [-26.5, 30.5], zoom: 6, zoomControl: true });
+      addTiles(mobileMap);
+      addOriginMarker(mobileMap);
+      DESTS.forEach((d) => {
+        const m = makeMarker(d, mobileMap, () => {
+          document.getElementById('mobile-map').classList.remove('open');
+          scrollToStory(d.id);
+        });
+        mobileMarkers[d.id] = m;
+      });
+      fitBounds(mobileMap);
+    } else {
+      setTimeout(() => mobileMap.invalidateSize(), 100);
     }
   }
 
-  // ---------- Mobile toggle ----------
-  const mobileToggle = document.getElementById('mobile-toggle');
-  const app = document.getElementById('app');
-  mobileToggle.addEventListener('click', () => {
-    app.classList.toggle('show-list');
-    mobileToggle.textContent = app.classList.contains('show-list') ? '🗺 Map' : '📋 List';
-  });
+  function addTiles(m) {
+    L.tileLayer(
+      'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}{r}.png',
+      {
+        attribution: '&copy; <a href="https://openstreetmap.org">OSM</a> · <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19,
+      }
+    ).addTo(m);
+  }
 
-  // ---------- Initial render ----------
-  render();
+  function addOriginMarker(m) {
+    const icon = L.divIcon({
+      className: '',
+      html: '<div class="pin-origin">M</div>',
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+    });
+    L.marker([ORIGIN.lat, ORIGIN.lon], { icon, zIndexOffset: 1000 })
+      .addTo(m)
+      .bindTooltip('Maputo · origin', { direction: 'top', offset: [0, -10] });
+  }
 
-  // Fit bounds to show Maputo + all destinations
-  setTimeout(() => {
+  function makeMarker(d, m, onClick) {
+    const tk = d.tier === 'urban' ? 'tu' : 't' + d.tier;
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="pin-marker ${tk}" data-id="${d.id}"></div>`,
+      iconSize: [22, 22],
+      iconAnchor: [11, 11],
+    });
+    const marker = L.marker([d.lat, d.lon], { icon }).addTo(m);
+    marker.on('click', onClick);
+    marker.bindTooltip(`<b>${d.name}</b><br>${d.drive_h}h · ${d.altitude_m}m`, {
+      direction: 'top', offset: [0, -10],
+    });
+    return marker;
+  }
+
+  function fitBounds(m) {
     const bounds = L.latLngBounds([
       [ORIGIN.lat, ORIGIN.lon],
       ...DESTS.map((d) => [d.lat, d.lon]),
     ]);
-    map.fitBounds(bounds, { padding: [40, 40] });
-  }, 100);
+    setTimeout(() => m.fitBounds(bounds, { padding: [30, 30] }), 60);
+  }
+
+  function syncMarkers(visible) {
+    if (!map) return;
+    const ids = new Set(visible.map((d) => d.id));
+    DESTS.forEach((d) => {
+      const m = mainMarkers[d.id];
+      if (!m) return;
+      if (ids.has(d.id)) { if (!map.hasLayer(m)) m.addTo(map); }
+      else { if (map.hasLayer(m)) map.removeLayer(m); }
+      const mm = mobileMarkers[d.id];
+      if (mm && mobileMap) {
+        if (ids.has(d.id)) { if (!mobileMap.hasLayer(mm)) mm.addTo(mobileMap); }
+        else { if (mobileMap.hasLayer(mm)) mobileMap.removeLayer(mm); }
+      }
+    });
+  }
+
+  function scrollToStory(id) {
+    const el = document.getElementById('story-' + id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.style.transition = 'background .15s ease';
+    el.style.background = 'oklch(0.78 0.13 78 / 0.06)';
+    setTimeout(() => (el.style.background = ''), 1200);
+  }
+
+  // -------- Reveal on scroll (opt-in, fail-safe) --------
+  let revealObs;
+  function armReveal() {
+    const els = document.querySelectorAll('.anim');
+    // Fallback: ensure visible after 1.5s no matter what
+    setTimeout(() => els.forEach((el) => el.classList.add('in')), 1500);
+    if (!('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('in'));
+      return;
+    }
+    if (revealObs) revealObs.disconnect();
+    revealObs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          revealObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -5% 0px' });
+    els.forEach((el) => revealObs.observe(el));
+  }
+
+  // -------- Active marker as user scrolls --------
+  const storyObs = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        const id = e.target.dataset.id;
+        Object.entries(mainMarkers).forEach(([k, m]) => {
+          const node = m.getElement();
+          if (!node) return;
+          const dot = node.querySelector('.pin-marker');
+          if (dot) dot.classList.toggle('active', k === id);
+        });
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px' });
+
+  // re-observe after each render
+  const origRender = renderStories;
+  // (reveal arming already calls it)
+  setTimeout(() => {
+    document.querySelectorAll('.story').forEach((s) => storyObs.observe(s));
+  }, 800);
+
+  // Re-observe whenever stories rerender
+  const mo = new MutationObserver(() => {
+    document.querySelectorAll('.story').forEach((s) => storyObs.observe(s));
+  });
+  mo.observe(document.getElementById('stories'), { childList: true });
 })();
